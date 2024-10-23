@@ -100,5 +100,5 @@ export default function TestDatabasePage() {
         </button>
       </div>
     </div>
-  );
+  )
 }
