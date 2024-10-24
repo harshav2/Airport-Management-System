@@ -1,7 +1,7 @@
 // app/api/users/route.ts
 
 import { NextResponse } from "next/server";
-import { executeQuery } from "@/lib/db";
+import { executeQuery } from "../../../lib/db";
 
 export async function GET() {
   try {
