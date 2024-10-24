@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Plane, Users, ShoppingBag } from "lucide-react";
 import Navbar from "/app/components/navbar";
+import Footer from "./components/footer";
 
 export default function Home() {
   return (
@@ -69,6 +70,7 @@ export default function Home() {
           </div>
         </section>
       </main>
+      <Footer />
     </div>
   );
 }

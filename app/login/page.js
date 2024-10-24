@@ -4,28 +4,25 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import Navbar from "../components/navbar";
+import Footer from "../components/footer";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [userType, setUserType] = useState("");
-  const [error, setError] = useState("");
+  const [userType, setUserType] = useState("Passenger"); // Default value for userType
+  const [error, setError] = useState(""); // Initialize error state
   const router = useRouter();
-
-  useEffect(() => {
-    setUserType("Passenger");
-  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    setError(""); // Clear previous errors
 
     try {
       const response = await fetch("/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, name, userType }),
+        body: JSON.stringify({ email, password, name, userType }), // Include name and userType in request
       });
 
       if (response.ok) {
@@ -44,14 +41,14 @@ export default function LoginPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
-      <main className="flex-1 flex items-center justify-center bg-gray-100 px-4">
+      <main className="flex flex-col justify-center items-center flex-grow bg-gray-100 px-4 py-6">
         <div className="w-full max-w-md p-6 sm:p-8 bg-white rounded-lg shadow-md">
           <h1 className="text-2xl sm:text-3xl font-bold text-center mb-6">
             Login to Airport Management System
           </h1>
+          {error && <p className="text-red-500 text-sm">{error}</p>}{" "}
+          {/* Display error message */}
           <form onSubmit={handleSubmit} className="space-y-4">
-            {error && <p className="text-red-500 text-sm">{error}</p>}
-
             <div className="space-y-2">
               <label
                 htmlFor="name"
@@ -113,6 +110,7 @@ export default function LoginPage() {
           </form>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

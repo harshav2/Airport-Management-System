@@ -2,14 +2,15 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import Navbar from "../components/navbar";
+import Footer from "../components/footer";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userType, setUserType] = useState("");
+  const [error, setError] = useState("");
   const router = useRouter();
 
   const handleSubmit = async (e) => {
@@ -22,7 +23,7 @@ export default function LoginPage() {
     }
 
     try {
-      const response = await fetch("/api/staff-login", {
+      const response = await fetch("/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, userType }),
@@ -31,6 +32,7 @@ export default function LoginPage() {
       if (response.ok) {
         const data = await response.json();
         localStorage.setItem("token", data.token);
+        localStorage.setItem("refreshToken", data.refreshToken);
         router.push(`/dashboard/${userType.toLowerCase()}`);
       } else {
         const errorData = await response.json();
@@ -39,7 +41,6 @@ export default function LoginPage() {
     } catch (error) {
       setError("An error occurred. Please try again.");
     }
-    router.push(`/dashboard/${userType}`);
   };
 
   return (
@@ -50,6 +51,7 @@ export default function LoginPage() {
           <h1 className="text-2xl font-bold text-center mb-6">
             Login to Airport Management System
           </h1>
+          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <label
@@ -114,6 +116,7 @@ export default function LoginPage() {
           </form>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

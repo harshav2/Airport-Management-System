@@ -1,41 +1,37 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import Navbar from "../components/navbar";
+import Footer from "../components/footer";
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [userType, setUserType] = useState("");
-  const [error, setError] = useState(""); // Initialize error state
+  const [error, setError] = useState("");
   const router = useRouter();
-
-  // Set userType once when the component mounts
-  useEffect(() => {
-    setUserType("Passenger");
-  }, []); // Empty dependency array ensures this runs only once
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // Clear previous errors
+    setError("");
 
     try {
-      const response = await fetch("/api/login", {
+      const response = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, name, userType }), // Include name and userType in request
+        body: JSON.stringify({ email, password, name, userType: "Passenger" }),
       });
 
       if (response.ok) {
         const data = await response.json();
         localStorage.setItem("token", data.token);
+        localStorage.setItem("refreshToken", data.refreshToken);
         router.push("/dashboard/passenger");
       } else {
         const errorData = await response.json();
-        setError(errorData.message || "Login failed");
+        setError(errorData.message || "Registration failed");
       }
     } catch (error) {
       setError("An error occurred. Please try again.");
@@ -45,14 +41,13 @@ export default function LoginPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
-      <main className="flex-1 flex items-center justify-center bg-gray-100 px-4">
+      <main className="flex flex-col justify-center items-center flex-grow bg-gray-100 px-4 py-6">
         <div className="w-full max-w-md p-6 sm:p-8 bg-white rounded-lg shadow-md">
           <h1 className="text-2xl sm:text-3xl font-bold text-center mb-6">
-            Login to Airport Management System
+            Register for Airport Management System
           </h1>
+          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
           <form onSubmit={handleSubmit} className="space-y-4">
-            {error && <p className="text-red-500 text-sm">{error}</p>}{" "}
-            {/* Display error message */}
             <div className="space-y-2">
               <label
                 htmlFor="name"
@@ -108,12 +103,13 @@ export default function LoginPage() {
               className="inline-flex items-center justify-center rounded-md text-sm sm:text-base font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 sm:h-11 px-4 py-2 w-full"
               type="submit"
             >
-              Login
+              Register
               <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
             </button>
           </form>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }
