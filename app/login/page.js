@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import Navbar from "../components/navbar";
@@ -28,7 +28,11 @@ export default function LoginPage() {
       if (response.ok) {
         const data = await response.json();
         localStorage.setItem("token", data.token);
-        router.push("/dashboard/passenger");
+        if (userType === "Passenger") {
+          router.push("/dashboard/passenger");
+        } else if (userType === "Staff") {
+          router.push("/dashboard/staff-dashboard");
+        }
       } else {
         const errorData = await response.json();
         setError(errorData.message || "Login failed");
@@ -46,8 +50,7 @@ export default function LoginPage() {
           <h1 className="text-2xl sm:text-3xl font-bold text-center mb-6">
             Login to Airport Management System
           </h1>
-          {error && <p className="text-red-500 text-sm">{error}</p>}{" "}
-          {/* Display error message */}
+          {error && <p className="text-red-500 text-sm mb-4">{error}</p>} {/* Display error message */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <label
@@ -99,6 +102,24 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
+            </div>
+            <div className="space-y-2">
+              <label
+                htmlFor="userType"
+                className="text-sm sm:text-base font-medium leading-none"
+              >
+                User Type
+              </label>
+              <select
+                id="userType"
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm sm:text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                required
+                value={userType}
+                onChange={(e) => setUserType(e.target.value)}
+              >
+                <option value="Passenger">Passenger</option>
+                <option value="Staff">Staff</option>
+              </select>
             </div>
             <button
               className="inline-flex items-center justify-center rounded-md text-sm sm:text-base font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 sm:h-11 px-4 py-2 w-full"
