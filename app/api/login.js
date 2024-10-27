@@ -1,6 +1,7 @@
 import { executeQuery } from "../../lib/db";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { JWT_EXPIRATION, JWT_REFRESH_EXPIRATION } from "../../config/jwt";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -47,14 +48,14 @@ export default async function handler(req, res) {
         sessionId: sessionId,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "15m" } // Short expiration time
+      { expiresIn: JWT_EXPIRATION }
     );
 
     // Generate refresh token
     const refreshToken = jwt.sign(
       { userId: user.id, sessionId: sessionId },
       process.env.JWT_REFRESH_SECRET,
-      { expiresIn: "7d" }
+      { expiresIn: JWT_REFRESH_EXPIRATION }
     );
 
     // Store refresh token in database

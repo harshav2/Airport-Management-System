@@ -1,5 +1,6 @@
 import { executeQuery } from "../../lib/db";
 import jwt from "jsonwebtoken";
+import { JWT_EXPIRATION } from "../../config/jwt";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -33,7 +34,7 @@ export default async function handler(req, res) {
         sessionId: decoded.sessionId,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "15m" }
+      { expiresIn: JWT_EXPIRATION }
     );
 
     res.status(200).json({ token: newToken });
