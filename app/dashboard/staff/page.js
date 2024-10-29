@@ -39,7 +39,7 @@ export default function StaffDashboard() {
               </button>
               <Link href="/" className="flex items-center space-x-2">
                 <Plane className="h-8 w-8 text-blue-500" />
-                <span className="text-xl font-semibold text-gray-800">AirporMS</span>
+                <span className="text-xl font-semibold text-gray-800">AirportMS</span>
               </Link>
             </div>
             <nav className="hidden md:flex space-x-4">
