@@ -9,35 +9,34 @@ import Footer from "../components/footer";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
-  const [userType, setUserType] = useState("Passenger"); // Default value for userType
-  const [error, setError] = useState(""); // Initialize error state
+  const [error, setError] = useState("");
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // Clear previous errors
+    setError("");
 
     try {
       const response = await fetch("/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, name, userType }), // Include name and userType in request
+        body: JSON.stringify({ email, password }),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
-        const data = await response.json();
         localStorage.setItem("token", data.token);
-        if (userType === "Passenger") {
-          router.push("/dashboard/passenger");
-        } else if (userType === "Staff") {
-          router.push("/dashboard/staff-dashboard");
-        }
+        localStorage.setItem("refreshToken", data.refreshToken);
+        router.push("/dashboard/passenger");
       } else {
-        const errorData = await response.json();
-        setError(errorData.message || "Login failed");
+        setError(data.message || "Login failed");
+        if (data.error) {
+          console.error("Detailed error:", data.error);
+        }
       }
     } catch (error) {
+      console.error("Login error:", error);
       setError("An error occurred. Please try again.");
     }
   };
@@ -50,25 +49,8 @@ export default function LoginPage() {
           <h1 className="text-2xl sm:text-3xl font-bold text-center mb-6">
             Login to Airport Management System
           </h1>
-          {error && <p className="text-red-500 text-sm mb-4">{error}</p>} {/* Display error message */}
+          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <label
-                htmlFor="name"
-                className="text-sm sm:text-base font-medium leading-none"
-              >
-                Name
-              </label>
-              <input
-                id="name"
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm sm:text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                required
-                placeholder="Enter your name"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </div>
             <div className="space-y-2">
               <label
                 htmlFor="email"
@@ -102,24 +84,6 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-            </div>
-            <div className="space-y-2">
-              <label
-                htmlFor="userType"
-                className="text-sm sm:text-base font-medium leading-none"
-              >
-                User Type
-              </label>
-              <select
-                id="userType"
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm sm:text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                required
-                value={userType}
-                onChange={(e) => setUserType(e.target.value)}
-              >
-                <option value="Passenger">Passenger</option>
-                <option value="Staff">Staff</option>
-              </select>
             </div>
             <button
               className="inline-flex items-center justify-center rounded-md text-sm sm:text-base font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 sm:h-11 px-4 py-2 w-full"

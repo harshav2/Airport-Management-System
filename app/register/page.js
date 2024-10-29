@@ -7,9 +7,9 @@ import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 
 export default function RegisterPage() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
 
@@ -21,19 +21,35 @@ export default function RegisterPage() {
       const response = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, name, userType: "Passenger" }),
+        body: JSON.stringify({ name, email, password, userType: "Passenger" }),
       });
 
       if (response.ok) {
-        const data = await response.json();
+        let data;
+        try {
+          data = await response.json();
+        } catch (jsonError) {
+          console.error("JSON parsing error:", jsonError);
+          setError("Error parsing server response. Please try again.");
+          return;
+        }
+
         localStorage.setItem("token", data.token);
         localStorage.setItem("refreshToken", data.refreshToken);
         router.push("/dashboard/passenger");
       } else {
-        const errorData = await response.json();
+        let errorData;
+        try {
+          errorData = await response.json();
+        } catch (jsonError) {
+          console.error("Error parsing error response:", jsonError);
+          setError("An unexpected error occurred. Please try again.");
+          return;
+        }
         setError(errorData.message || "Registration failed");
       }
     } catch (error) {
+      console.error("Registration error:", error);
       setError("An error occurred. Please try again.");
     }
   };
