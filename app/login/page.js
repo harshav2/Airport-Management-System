@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
+import Link from "next/link"; // Import Link for redirection
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -52,10 +53,7 @@ export default function LoginPage() {
           {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <label
-                htmlFor="email"
-                className="text-sm sm:text-base font-medium leading-none"
-              >
+              <label htmlFor="email" className="text-sm sm:text-base font-medium leading-none">
                 Email
               </label>
               <input
@@ -69,10 +67,7 @@ export default function LoginPage() {
               />
             </div>
             <div className="space-y-2">
-              <label
-                htmlFor="password"
-                className="text-sm sm:text-base font-medium leading-none"
-              >
+              <label htmlFor="password" className="text-sm sm:text-base font-medium leading-none">
                 Password
               </label>
               <input
@@ -93,6 +88,12 @@ export default function LoginPage() {
               <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
             </button>
           </form>
+          <p className="mt-4 text-center text-sm">
+            Don’t have an account?{" "}
+            <Link href="/register" className="text-blue-600 hover:underline">
+              Create Account
+            </Link>
+          </p>
         </div>
       </main>
       <Footer />

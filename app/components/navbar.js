@@ -6,10 +6,7 @@ export default function Navbar() {
     <header className="px-4 lg:px-6 h-14 flex items-center bg-white border-b border-gray-200 shadow-sm fixed top-0 w-full z-10">
       <div className="flex items-center justify-between w-full max-w-7xl mx-auto">
         {/* Logo */}
-        <Link className="flex items-center justify-center" href="/">
-          <Plane className="h-6 w-6" />
-          <span className="ml-2 text-lg font-bold">AirportMS</span>
-        </Link>
+        
 
         {/* Nav Links */}
         <nav className="hidden md:flex ml-auto space-x-6">
