@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
-import Link from "next/link"; // Import Link for redirection
+import Link from "next/link";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
@@ -21,20 +21,20 @@ export default function LoginPage() {
       const response = await fetch("/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username, password }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("refreshToken", data.refreshToken);
-        router.push("/dashboard/passenger");
+        // Check if the user is admin
+        if (data.userType === "Admin") {
+          router.push("/dashboard/admin");
+        } else {
+          router.push("/dashboard/passenger");
+        }
       } else {
         setError(data.message || "Login failed");
-        if (data.error) {
-          console.error("Detailed error:", data.error);
-        }
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -53,21 +53,27 @@ export default function LoginPage() {
           {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <label htmlFor="email" className="text-sm sm:text-base font-medium leading-none">
-                Email
+              <label
+                htmlFor="username"
+                className="text-sm sm:text-base font-medium leading-none"
+              >
+                Username
               </label>
               <input
-                id="email"
+                id="username"
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm sm:text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                placeholder="Enter your email"
+                placeholder="Enter your username"
                 required
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
               />
             </div>
             <div className="space-y-2">
-              <label htmlFor="password" className="text-sm sm:text-base font-medium leading-none">
+              <label
+                htmlFor="password"
+                className="text-sm sm:text-base font-medium leading-none"
+              >
                 Password
               </label>
               <input
@@ -89,7 +95,7 @@ export default function LoginPage() {
             </button>
           </form>
           <p className="mt-4 text-center text-sm">
-            Don’t have an account?{" "}
+            Don&apos;t have an account?{" "}
             <Link href="/register" className="text-blue-600 hover:underline">
               Create Account
             </Link>
