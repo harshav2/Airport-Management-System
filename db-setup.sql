@@ -3,10 +3,10 @@ CREATE DATABASE IF NOT EXISTS airport_management_system;
 USE airport_management_system;
 
 -- Passenger table
-CREATE TABLE Passenger (
+CREATE TABLE User (
     ID INT AUTO_INCREMENT PRIMARY KEY,
     Name VARCHAR(50) NOT NULL,
-    Username VARCHAR(100) UNIQUE NOT NULL
+    Username VARCHAR(100) UNIQUE NOT NULL,
     Password VARCHAR(50) NOT NULL,
     UserType VARCHAR(10) DEFAULT "User"
 );
@@ -32,19 +32,18 @@ CREATE TABLE Flight (
 CREATE TABLE Baggage (
     Type VARCHAR(50),
     FlightID INT,
-    PassengerID INT,
-    PRIMARY KEY (Type, FlightID, PassengerID),
+    UserID INT,
+    PRIMARY KEY (Type, FlightID, UserID),
     FOREIGN KEY (FlightID) REFERENCES Flight(ID),
-    FOREIGN KEY (PassengerID) REFERENCES Passenger(ID)
+    FOREIGN KEY (UserID) REFERENCES User(ID)
 );
 
 -- Passenger on Flight table
-CREATE TABLE PassengerOnFlight (
-    PassengerID INT,
+CREATE TABLE UserOnFlight (
+    UserID INT,
     FlightID INT,
-    SeatNumber VARCHAR(10),
-    PRIMARY KEY (PassengerID, FlightID, SeatNumber),
-    FOREIGN KEY (PassengerID) REFERENCES Passenger(ID),
+    PRIMARY KEY (UserID, FlightID),
+    FOREIGN KEY (UserID) REFERENCES User(ID),
     FOREIGN KEY (FlightID) REFERENCES Flight(ID)
 );
 
@@ -95,12 +94,11 @@ CREATE TABLE Transaction (
     TransactionID INT AUTO_INCREMENT PRIMARY KEY,
     Qty INT NOT NULL,
     Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-    Price DECIMAL(10, 2) NOT NULL,
     Item_name VARCHAR(100) NOT NULL,
-    PassengerID INT,
+    UserID INT,
     StoreID INT,
     FOREIGN KEY (Item_name) REFERENCES Item(Name),
-    FOREIGN KEY (PassengerID) REFERENCES Passenger(ID),
+    FOREIGN KEY (UserID) REFERENCES User(ID),
     FOREIGN KEY (StoreID) REFERENCES Stores(StoreID)
 );
 
@@ -112,7 +110,7 @@ CREATE TABLE RefreshTokens (
     SessionID VARCHAR(255) NOT NULL,
     ExpiresAt DATETIME NOT NULL,
     CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (UserID) REFERENCES Passenger(ID)
+    FOREIGN KEY (UserID) REFERENCES User(ID)
 );
 
 -- Index for faster token lookups
@@ -120,10 +118,10 @@ CREATE INDEX idx_refresh_token ON RefreshTokens(Token);
 
 -- Add any additional indexes as needed for performance optimization
 CREATE INDEX idx_flight_airline ON Flight(AirlineID);
-CREATE INDEX idx_baggage_flight_passenger ON Baggage(FlightID, PassengerID);
-CREATE INDEX idx_passenger_on_flight ON PassengerOnFlight(FlightID, PassengerID);
+CREATE INDEX idx_baggage_flight_user ON Baggage(FlightID, UserID);
+CREATE INDEX idx_user_on_flight ON UserOnFlight(FlightID, UserID);
 CREATE INDEX idx_aircraft_flying_flight ON AircraftFlyingFlight(FlightID, Date);
-CREATE INDEX idx_transaction_passenger ON Transaction(PassengerID);
+CREATE INDEX idx_transaction_user ON Transaction(UserID);
 CREATE INDEX idx_transaction_store ON Transaction(StoreID);
 
 for this database, generate dummy data. i want at least 10 tuples per table with you covering all the edge cases 
