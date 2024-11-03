@@ -123,5 +123,3 @@ CREATE INDEX idx_user_on_flight ON UserOnFlight(FlightID, UserID);
 CREATE INDEX idx_aircraft_flying_flight ON AircraftFlyingFlight(FlightID, Date);
 CREATE INDEX idx_transaction_user ON Transaction(UserID);
 CREATE INDEX idx_transaction_store ON Transaction(StoreID);
-
-for this database, generate dummy data. i want at least 10 tuples per table with you covering all the edge cases 
