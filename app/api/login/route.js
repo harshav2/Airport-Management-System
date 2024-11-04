@@ -6,12 +6,10 @@ import bcrypt from "bcryptjs";
 export async function POST(request) {
   try {
     const { username, password } = await request.json();
-    console.log(username, password);
     const users = await executeQuery({
       query: `SELECT * FROM user WHERE Username = ?`,
       values: [username],
     });
-    console.log(users);
 
     if (users.length === 0) {
       return NextResponse.json(
@@ -21,7 +19,7 @@ export async function POST(request) {
     }
 
     const user = users[0];
-    console.log(user.password);
+    console.log(user[0]);
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
@@ -33,14 +31,14 @@ export async function POST(request) {
 
     const token = await generateToken({
       userId: user.ID,
-      userType: user.UserType,
+      userType: user.usertype,
     });
     const refreshToken = await generateRefreshToken({ userId: user.ID });
 
     // Set cookies
     const response = NextResponse.json({
       message: "Login successful",
-      userType: user.UserType,
+      userType: user.usertype,
     });
 
     response.cookies.set("token", token, {

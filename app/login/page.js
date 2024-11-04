@@ -25,7 +25,6 @@ export default function LoginPage() {
       });
 
       const data = await response.json();
-
       if (response.ok) {
         router.push(`/dashboard/${data.userType.toLowerCase()}`);
       } else {
