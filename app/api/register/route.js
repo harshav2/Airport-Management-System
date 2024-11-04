@@ -6,19 +6,20 @@ import { NextResponse } from "next/server";
 
 export async function POST(request) {
   try {
-    const { name, email, password, userType } = await request.json();
+    const { name, username, password, userType } = await request.json();
 
-    if (!name || !email || !password || !userType) {
+    if (!name || !username || !password || !userType) {
       return NextResponse.json(
         { message: "Missing required fields" },
+
         { status: 400 }
       );
     }
 
     // Check if user already exists
     const existingUser = await executeQuery({
-      query: "SELECT * FROM Passenger WHERE Email = ?",
-      values: [email],
+      query: "SELECT * FROM User WHERE Username = ?",
+      values: [username],
     });
 
     if (existingUser.length > 0) {
@@ -34,8 +35,9 @@ export async function POST(request) {
 
     // Insert new user into the database
     const result = await executeQuery({
-      query: "INSERT INTO Passenger (Name, Email, password) VALUES (?, ?, ?)",
-      values: [name, email, hashedPassword],
+      query:
+        "INSERT INTO User (Name, Username, password, usertype) VALUES (?, ?, ?, ?)",
+      values: [name, username, hashedPassword, userType],
     });
 
     // Generate a new session ID
@@ -47,7 +49,7 @@ export async function POST(request) {
     const token = jwt.sign(
       {
         userId: result.insertId,
-        email,
+        username,
         userType,
         sessionId: sessionId,
       },

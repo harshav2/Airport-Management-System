@@ -27,12 +27,7 @@ export default function LoginPage() {
       const data = await response.json();
 
       if (response.ok) {
-        // Check if the user is admin
-        if (data.userType === "Admin") {
-          router.push("/dashboard/admin");
-        } else {
-          router.push("/dashboard/passenger");
-        }
+        router.push(`/dashboard/${data.userType.toLowerCase()}`);
       } else {
         setError(data.message || "Login failed");
       }

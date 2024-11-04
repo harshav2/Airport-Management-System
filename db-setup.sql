@@ -7,8 +7,8 @@ CREATE TABLE User (
     ID INT AUTO_INCREMENT PRIMARY KEY,
     Name VARCHAR(50) NOT NULL,
     Username VARCHAR(100) UNIQUE NOT NULL,
-    Password VARCHAR(50) NOT NULL,
-    UserType VARCHAR(10) DEFAULT "User"
+    Password VARCHAR(100) NOT NULL,
+    UserType ENUM("Admin","User","Airline","Store") DEFAULT "User"
 );
 
 -- Airline table

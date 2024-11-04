@@ -6,11 +6,12 @@ import bcrypt from "bcryptjs";
 export async function POST(request) {
   try {
     const { username, password } = await request.json();
-
+    console.log(username, password);
     const users = await executeQuery({
-      query: "SELECT * FROM Passenger WHERE Username = ?",
+      query: `SELECT * FROM user WHERE Username = ?`,
       values: [username],
     });
+    console.log(users);
 
     if (users.length === 0) {
       return NextResponse.json(
@@ -20,7 +21,8 @@ export async function POST(request) {
     }
 
     const user = users[0];
-    const passwordMatch = await bcrypt.compare(password, user.Password);
+    console.log(user.password);
+    const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
       return NextResponse.json(
@@ -59,7 +61,7 @@ export async function POST(request) {
   } catch (error) {
     console.error("Login error:", error);
     return NextResponse.json(
-      { message: "An error occurred during login" },
+      { message: "An error occurred during login", error: error.message },
       { status: 500 }
     );
   }
