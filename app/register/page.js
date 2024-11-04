@@ -15,11 +15,8 @@ export default function RegisterPage() {
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleSubmit = async () => {
-    console.log("Name:", name);
-    console.log("Username:", username);
-    console.log("Type:", userType);
-    console.log("Password:", password);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     setError("");
 
     try {
@@ -28,41 +25,38 @@ export default function RegisterPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, username, password, userType }),
       });
-
+      console.log(response);
       if (response.ok) {
         try {
           const data = await response.json();
+          localStorage.setItem("token", data.token);
+          localStorage.setItem("refreshToken", data.refreshToken);
+          router.push(`/dashboard/${userType.toLowerCase()}`);
         } catch (jsonError) {
           console.error("JSON parsing error:", jsonError);
           setError("Error parsing server response. Please try again.");
-          return;
         }
-
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("refreshToken", data.refreshToken);
-        router.push(`/dashboard/${userType.toLowerCase()}`);
       } else {
-        let errorData;
         try {
-          errorData = await response.json();
+          let errorData = await response.json();
+          setError(errorData.message || "Registration failed");
         } catch (jsonError) {
           console.error("Error parsing error response:", jsonError);
           setError("An unexpected error occurred. Please try again.");
           return;
         }
-        setError(errorData.message || "Registration failed");
       }
     } catch (error) {
       console.error("Registration error:", error);
-      setError("An error occurred. Please try again.");
+      setError(error.message);
     }
   };
 
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
-      <main className="flex flex-col justify-center items-center flex-grow bg-gray-100 px-4 py-6">
-        <div className="w-full max-w-md p-6 sm:p-8 bg-white rounded-lg shadow-md">
+      <main className="flex-grow bg-gray-100 pt-20 px-4 py-8">
+        <div className="max-w-md mx-auto p-6 sm:p-8 bg-white rounded-lg shadow-md">
           <h1 className="text-2xl sm:text-3xl font-bold text-center mb-6">
             Register for Airport Management System
           </h1>

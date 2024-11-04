@@ -5,10 +5,10 @@ export default function Navbar() {
   return (
     <header className="px-4 lg:px-6 h-14 flex items-center bg-white border-b border-gray-200 shadow-sm fixed top-0 w-full z-10">
       <div className="flex items-center justify-between w-full max-w-7xl mx-auto">
-        {/* Logo */}
-        
-
-        {/* Nav Links */}
+        <Link href="/" className="flex items-center space-x-1">
+          <Plane className="h-8 w-8" />
+          <span className="text-xl font-semibold text-gray-800">AirportMS</span>
+        </Link>
         <nav className="hidden md:flex ml-auto space-x-6">
           <Link
             className="text-sm font-medium hover:underline underline-offset-4"
