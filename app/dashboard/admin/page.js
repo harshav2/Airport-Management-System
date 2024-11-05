@@ -5,13 +5,11 @@ import Link from "next/link";
 import {
   Plane,
   Users,
-  Calendar,
   Briefcase,
   LogOut,
   Menu,
   Settings,
   BarChart,
-  AlertCircle,
   ShoppingBag,
 } from "lucide-react";
 
@@ -80,13 +78,12 @@ export default function AdminDashboard() {
       </header>
 
       <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar */}
         <aside
           className={`${
             isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-          } lg:translate-x-0 fixed lg:relative z-40 w-64 h-full bg-white shadow-md transition-transform duration-300 ease-in-out`}
+          } lg:translate-x-0 fixed lg:relative z-40 w-64 h-[calc(100vh-4rem)] bg-white shadow-md transition-transform duration-300 ease-in-out overflow-y-auto`}
         >
-          <div className="h-full flex flex-col justify-between">
+          <div className="flex flex-col h-full justify-between">
             <nav className="mt-8">
               <a
                 href="#"
