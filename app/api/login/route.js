@@ -17,10 +17,10 @@ export async function POST(request) {
         { status: 401 }
       );
     }
-
+    console.log(users);
     const user = users[0];
     console.log(user[0]);
-    const passwordMatch = await bcrypt.compare(password, user.password);
+    const passwordMatch = await bcrypt.compare(password, user.Password);
 
     if (!passwordMatch) {
       return NextResponse.json(
@@ -31,14 +31,14 @@ export async function POST(request) {
 
     const token = await generateToken({
       userId: user.ID,
-      userType: user.usertype,
+      userType: user.UserType,
     });
     const refreshToken = await generateRefreshToken({ userId: user.ID });
 
     // Set cookies
     const response = NextResponse.json({
       message: "Login successful",
-      userType: user.usertype,
+      userType: user.UserType,
     });
 
     response.cookies.set("token", token, {
