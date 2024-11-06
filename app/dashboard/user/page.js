@@ -1,6 +1,7 @@
 "use client";
-
 import { useState } from "react";
+import { toast } from "react-toastify"; // Import the toast function
+import 'react-toastify/dist/ReactToastify.css'; // Import the toast styles
 import Link from "next/link";
 import {
   Plane,
@@ -393,52 +394,142 @@ function AirportMap() {
     </div>
   );
 }
+export function CheckIn() {
+  const [userId, setUserId] = useState("");
+  const [flightId, setFlightId] = useState("");
+  const [baggageType, setBaggageType] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");  // State to handle alert message visibility
 
-function CheckIn() {
+  const handleBaggageChange = (e) => {
+    setBaggageType(e.target.value);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!userId || !flightId || !baggageType) {
+      setAlertMessage("Please fill in all required fields.");
+      setTimeout(() => setAlertMessage(""), 1000); // Hide message after 1 second
+      return;
+    }
+
+    // Prepare the payload
+    const payload = {
+      type: baggageType,  // Use a single type
+      flightId,
+      userId,
+    };
+
+    try {
+      // Send the data to your backend API endpoint
+      const response = await fetch('/api/check-in', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        
+        setAlertMessage(`Error: ${response.status} ${response.statusText} - ${errorData?.message || 'Please try again later.'}`);
+        setTimeout(() => setAlertMessage(""), 1000); // Hide message after 1 second
+        return;
+      }
+
+      const result = await response.json();
+      console.log('Success:', result);
+      setAlertMessage('Check-in successful!');
+      setTimeout(() => setAlertMessage(""), 1000); // Hide message after 1 second
+    } catch (error) {
+      console.error('Error:', error);
+      setAlertMessage('There was an error during check-in. Please try again.');
+      setTimeout(() => setAlertMessage(""), 1000); // Hide message after 1 second
+    }
+  };
+
   return (
     <div className="bg-white shadow rounded-lg p-4 md:p-6">
       <h2 className="text-xl font-semibold mb-4">Check-in</h2>
-      <form className="space-y-4">
+
+      {/* Display the alert message if exists */}
+      {alertMessage && (
+        <div className="alert bg-red-500 text-white p-2 rounded-md mb-4">
+          {alertMessage}
+        </div>
+      )}
+
+      <form className="space-y-4" onSubmit={handleSubmit}>
+        {/* User ID Input */}
         <div>
-          <label
-            className="block text-sm font-medium text-gray-700"
-            htmlFor="flightNumber"
-          >
-            Flight Number
+          <label className="block text-sm font-medium text-gray-700" htmlFor="userId">
+            User ID
           </label>
           <input
+            value={userId}
+            onChange={(e) => setUserId(e.target.value)}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-            id="flightNumber"
+            id="userId"
             type="text"
-            placeholder="AA1234"
+            placeholder="Enter your User ID"
           />
         </div>
+
+        {/* Flight ID Input */}
         <div>
-          <label
-            className="block text-sm font-medium text-gray-700"
-            htmlFor="lastName"
-          >
-            Last Name
+          <label className="block text-sm font-medium text-gray-700" htmlFor="flightId">
+            Flight ID
           </label>
           <input
+            value={flightId}
+            onChange={(e) => setFlightId(e.target.value)}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-            id="lastName"
+            id="flightId"
             type="text"
-            placeholder="Doe"
+            placeholder="Enter your Flight ID"
           />
         </div>
+
+        {/* Baggage Type Radio Buttons */}
         <div>
-          <button
-            className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="submit"
-          >
-            Check In
-          </button>
+          <label className="block text-lg font-bold text-gray-900">
+            Baggage Type
+          </label>
+          <div className="mt-2 space-y-2">
+            {["Check-in", "Check-out", "Both", "Other"].map((type) => (
+              <div key={type}>
+                <input
+                  type="radio"
+                  id={type}
+                  name="baggageType"
+                  value={type}
+                  checked={baggageType === type}
+                  onChange={handleBaggageChange}
+                />
+                <label className="ml-2 text-sm text-gray-600" htmlFor={type}>
+                  {type}
+                </label>
+              </div>
+            ))}
+          </div>
         </div>
+
+        {/* Submit Button */}
+        <button
+          type="submit"
+          className="w-full mt-4 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
+        >
+          Submit
+        </button>
       </form>
     </div>
   );
 }
+
+
+
+
+
 
 function FlightAlerts() {
   return (
@@ -473,3 +564,5 @@ function FlightAlerts() {
     </div>
   );
 }
+
+

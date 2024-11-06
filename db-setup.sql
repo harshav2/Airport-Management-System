@@ -123,3 +123,40 @@ CREATE INDEX idx_user_on_flight ON UserOnFlight(FlightID, UserID);
 CREATE INDEX idx_aircraft_flying_flight ON AircraftFlyingFlight(FlightID, Date);
 CREATE INDEX idx_transaction_user ON Transaction(UserID);
 CREATE INDEX idx_transaction_store ON Transaction(StoreID);
+
+
+--Triggers
+DELIMITER //
+
+CREATE TRIGGER usertype_check
+BEFORE INSERT ON User
+FOR EACH ROW
+BEGIN
+    -- Check for "admin" prefix
+    IF NEW.username LIKE 'admin%' THEN
+        IF NEW.usertype != 'admin' THEN
+            SIGNAL SQLSTATE '42000'
+            SET MESSAGE_TEXT = 'Invalid login type';
+        END IF;
+    END IF;
+    
+    -- Check for "airline" prefix
+    IF NEW.username LIKE 'airline%' THEN
+        IF NEW.usertype != 'airline' THEN
+            SIGNAL SQLSTATE '42000'
+            SET MESSAGE_TEXT = 'Invalid login type';
+        END IF;
+    END IF;
+
+    -- Check for "store" prefix
+    IF NEW.username LIKE 'store%' THEN
+        IF NEW.usertype != 'store' THEN
+            SIGNAL SQLSTATE '42000'
+            SET MESSAGE_TEXT = 'Invalid login type';
+        END IF;
+    END IF;
+END;
+//
+
+DELIMITER ;
+
