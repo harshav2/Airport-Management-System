@@ -1,6 +1,7 @@
 "use client";
-
 import { useState } from "react";
+import { toast } from "react-toastify"; // Import the toast function
+import 'react-toastify/dist/ReactToastify.css'; // Import the toast styles
 import Link from "next/link";
 import {
   Plane,
@@ -397,6 +398,7 @@ export function CheckIn() {
   const [userId, setUserId] = useState("");
   const [flightId, setFlightId] = useState("");
   const [baggageType, setBaggageType] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");  // State to handle alert message visibility
 
   const handleBaggageChange = (e) => {
     setBaggageType(e.target.value);
@@ -405,7 +407,8 @@ export function CheckIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!userId || !flightId || !baggageType) {
-      alert("Please fill in all required fields.");
+      setAlertMessage("Please fill in all required fields.");
+      setTimeout(() => setAlertMessage(""), 1000); // Hide message after 1 second
       return;
     }
 
@@ -418,7 +421,7 @@ export function CheckIn() {
 
     try {
       // Send the data to your backend API endpoint
-      const response = await fetch('/api/check-in', { // Adjusted to use relative path
+      const response = await fetch('/api/check-in', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -427,21 +430,35 @@ export function CheckIn() {
       });
 
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        const errorData = await response.json();
+        
+        setAlertMessage(`Error: ${response.status} ${response.statusText} - ${errorData?.message || 'Please try again later.'}`);
+        setTimeout(() => setAlertMessage(""), 1000); // Hide message after 1 second
+        return;
       }
 
       const result = await response.json();
       console.log('Success:', result);
-      alert('Check-in successful!');
+      setAlertMessage('Check-in successful!');
+      setTimeout(() => setAlertMessage(""), 1000); // Hide message after 1 second
     } catch (error) {
       console.error('Error:', error);
-      alert('There was an error during check-in. Please try again.');
+      setAlertMessage('There was an error during check-in. Please try again.');
+      setTimeout(() => setAlertMessage(""), 1000); // Hide message after 1 second
     }
   };
 
   return (
     <div className="bg-white shadow rounded-lg p-4 md:p-6">
       <h2 className="text-xl font-semibold mb-4">Check-in</h2>
+
+      {/* Display the alert message if exists */}
+      {alertMessage && (
+        <div className="alert bg-red-500 text-white p-2 rounded-md mb-4">
+          {alertMessage}
+        </div>
+      )}
+
       <form className="space-y-4" onSubmit={handleSubmit}>
         {/* User ID Input */}
         <div>
@@ -457,7 +474,7 @@ export function CheckIn() {
             placeholder="Enter your User ID"
           />
         </div>
-        
+
         {/* Flight ID Input */}
         <div>
           <label className="block text-sm font-medium text-gray-700" htmlFor="flightId">
