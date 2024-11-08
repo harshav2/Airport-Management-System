@@ -20,49 +20,15 @@ export default function AdminDashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const response = await fetch("/api/verify-token", {
-          method: "GET",
-          credentials: "include", // This is important to include cookies
-        });
-        if (!response.ok) {
-          throw new Error("Token invalid");
-        }
-      } catch (error) {
-        console.error("Authentication error:", error);
-        router.push("/login");
-      }
-    };
-
-    checkAuth();
-
-    // Add cache-control header
-    const meta = document.createElement("meta");
-    meta.httpEquiv = "Cache-Control";
-    meta.content = "no-store, no-cache, must-revalidate, proxy-revalidate";
-    document.getElementsByTagName("head")[0].appendChild(meta);
-
-    // Add event listener for page visibility change
-    document.addEventListener("visibilitychange", checkAuth);
-
-    return () => {
-      document.removeEventListener("visibilitychange", checkAuth);
-    };
-  }, [router]);
-
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   const handleLogout = async () => {
     try {
       const response = await fetch("/api/logout", {
         method: "POST",
-        credentials: "include", // This is important to include cookies
       });
 
       if (response.ok) {
-        // Redirect to login page
         router.push("/login");
       } else {
         console.error("Logout failed");
