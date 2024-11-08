@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Plane,
   Users,
@@ -12,12 +13,66 @@ import {
   BarChart,
   ShoppingBag,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await fetch("/api/verify-token", {
+          method: "GET",
+          credentials: "include", // This is important to include cookies
+        });
+        if (!response.ok) {
+          throw new Error("Token invalid");
+        }
+      } catch (error) {
+        console.error("Authentication error:", error);
+        router.push("/login");
+      }
+    };
+
+    checkAuth();
+
+    // Add cache-control header
+    const meta = document.createElement("meta");
+    meta.httpEquiv = "Cache-Control";
+    meta.content = "no-store, no-cache, must-revalidate, proxy-revalidate";
+    document.getElementsByTagName("head")[0].appendChild(meta);
+
+    // Add event listener for page visibility change
+    document.addEventListener("visibilitychange", checkAuth);
+
+    return () => {
+      document.removeEventListener("visibilitychange", checkAuth);
+    };
+  }, [router]);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("/api/logout", {
+        method: "POST",
+        credentials: "include", // This is important to include cookies
+      });
+
+      if (response.ok) {
+        // Redirect to login page
+        router.push("/login");
+      } else {
+        console.error("Logout failed");
+        alert("Logout failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
+      alert("An error occurred during logout. Please try again.");
+    }
+  };
 
   const renderContent = () => {
     switch (activeTab) {
@@ -192,18 +247,17 @@ export default function AdminDashboard() {
               </a>
             </nav>
             <div className="p-4">
-              <Link
-                href="/"
+              <Button
+                onClick={handleLogout}
                 className="flex items-center space-x-2 text-gray-600 hover:text-gray-900"
               >
                 <LogOut className="h-5 w-5" />
                 <span>Logout</span>
-              </Link>
+              </Button>
             </div>
           </div>
         </aside>
 
-        {/* Main content */}
         <main className="flex-1 overflow-y-auto p-4 lg:p-8">
           <h1 className="text-2xl font-semibold mb-6">Welcome, Admin</h1>
           {renderContent()}
@@ -314,7 +368,6 @@ function FlightManagement() {
                 </button>
               </td>
             </tr>
-            {/* Add more rows as needed */}
           </tbody>
         </table>
       </div>
@@ -370,7 +423,6 @@ function PassengerManagement() {
                 </button>
               </td>
             </tr>
-            {/* Add more rows as needed */}
           </tbody>
         </table>
       </div>
@@ -414,7 +466,6 @@ function AirlineManagement() {
                 </button>
               </td>
             </tr>
-            {/* Add more rows as needed */}
           </tbody>
         </table>
       </div>
@@ -464,7 +515,6 @@ function StoreManagement() {
                 </button>
               </td>
             </tr>
-            {/* Add more rows as needed */}
           </tbody>
         </table>
       </div>
@@ -481,14 +531,12 @@ function SystemAnalytics() {
           <h3 className="font-semibold mb-2">
             Passenger Traffic (Last 7 Days)
           </h3>
-          {/* Placeholder for chart */}
           <div className="h-64 bg-gray-200 flex items-center justify-center">
             Chart Placeholder
           </div>
         </div>
         <div className="bg-white p-4 rounded-lg shadow">
           <h3 className="font-semibold mb-2">Store Sales Performance</h3>
-          {/* Placeholder for chart */}
           <div className="h-64 bg-gray-200 flex items-center justify-center">
             Chart Placeholder
           </div>
@@ -535,7 +583,6 @@ function SystemSettings() {
               <option>UTC</option>
               <option>EST</option>
               <option>PST</option>
-              {/* Add more timezone options */}
             </select>
           </div>
           <div>

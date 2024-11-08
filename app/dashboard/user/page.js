@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
-import { toast } from "react-toastify"; // Import the toast function
-import 'react-toastify/dist/ReactToastify.css'; // Import the toast styles
+import "react-toastify/dist/ReactToastify.css"; // Import the toast styles
 import Link from "next/link";
 import {
   Plane,
@@ -398,7 +397,7 @@ export function CheckIn() {
   const [userId, setUserId] = useState("");
   const [flightId, setFlightId] = useState("");
   const [baggageType, setBaggageType] = useState("");
-  const [alertMessage, setAlertMessage] = useState("");  // State to handle alert message visibility
+  const [alertMessage, setAlertMessage] = useState(""); // State to handle alert message visibility
 
   const handleBaggageChange = (e) => {
     setBaggageType(e.target.value);
@@ -414,36 +413,40 @@ export function CheckIn() {
 
     // Prepare the payload
     const payload = {
-      type: baggageType,  // Use a single type
+      type: baggageType, // Use a single type
       flightId,
       userId,
     };
 
     try {
       // Send the data to your backend API endpoint
-      const response = await fetch('/api/check-in', {
-        method: 'POST',
+      const response = await fetch("/api/check-in", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        
-        setAlertMessage(`Error: ${response.status} ${response.statusText} - ${errorData?.message || 'Please try again later.'}`);
+
+        setAlertMessage(
+          `Error: ${response.status} ${response.statusText} - ${
+            errorData?.message || "Please try again later."
+          }`
+        );
         setTimeout(() => setAlertMessage(""), 1000); // Hide message after 1 second
         return;
       }
 
       const result = await response.json();
-      console.log('Success:', result);
-      setAlertMessage('Check-in successful!');
+      console.log("Success:", result);
+      setAlertMessage("Check-in successful!");
       setTimeout(() => setAlertMessage(""), 1000); // Hide message after 1 second
     } catch (error) {
-      console.error('Error:', error);
-      setAlertMessage('There was an error during check-in. Please try again.');
+      console.error("Error:", error);
+      setAlertMessage("There was an error during check-in. Please try again.");
       setTimeout(() => setAlertMessage(""), 1000); // Hide message after 1 second
     }
   };
@@ -462,7 +465,10 @@ export function CheckIn() {
       <form className="space-y-4" onSubmit={handleSubmit}>
         {/* User ID Input */}
         <div>
-          <label className="block text-sm font-medium text-gray-700" htmlFor="userId">
+          <label
+            className="block text-sm font-medium text-gray-700"
+            htmlFor="userId"
+          >
             User ID
           </label>
           <input
@@ -477,7 +483,10 @@ export function CheckIn() {
 
         {/* Flight ID Input */}
         <div>
-          <label className="block text-sm font-medium text-gray-700" htmlFor="flightId">
+          <label
+            className="block text-sm font-medium text-gray-700"
+            htmlFor="flightId"
+          >
             Flight ID
           </label>
           <input
@@ -526,11 +535,6 @@ export function CheckIn() {
   );
 }
 
-
-
-
-
-
 function FlightAlerts() {
   return (
     <div className="space-y-4">
@@ -564,5 +568,3 @@ function FlightAlerts() {
     </div>
   );
 }
-
-
