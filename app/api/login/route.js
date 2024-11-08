@@ -7,7 +7,7 @@ export async function POST(request) {
   try {
     const { username, password } = await request.json();
     const users = await executeQuery({
-      query: `SELECT * FROM User WHERE Username = ?`,
+      query: "SELECT * FROM User WHERE Username = ?",
       values: [username],
     });
 
@@ -17,9 +17,8 @@ export async function POST(request) {
         { status: 401 }
       );
     }
-    console.log(users);
+
     const user = users[0];
-    console.log(user[0]);
     const passwordMatch = await bcrypt.compare(password, user.Password);
 
     if (!passwordMatch) {
@@ -29,13 +28,13 @@ export async function POST(request) {
       );
     }
 
+    // Generate JWT token including userId
     const token = await generateToken({
       userId: user.ID,
       userType: user.UserType,
     });
     const refreshToken = await generateRefreshToken({ userId: user.ID });
 
-    // Set cookies
     const response = NextResponse.json({
       message: "Login successful",
       userType: user.UserType,

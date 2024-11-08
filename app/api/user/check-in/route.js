@@ -1,13 +1,13 @@
-// api/check-in.js
 import { NextResponse } from "next/server";
-import { executeQuery } from "../../../lib/db";
+import { executeQuery } from "../../../../lib/db";
 
 export async function POST(request) {
   try {
     console.log("Received request:", request);
 
-    const { type, flightId, userId: username } = await request.json();
-    console.log("Received payload:", { type, flightId, username });
+    // Get the payload from the request
+    const { type, flightId, userId: username, noOfCheckIn, noOfCabin } = await request.json();
+    console.log("Received payload:", { type, flightId, username, noOfCheckIn, noOfCabin });
 
     // Check if FlightID exists in Flight table
     const flightCheckResult = await executeQuery({
@@ -15,7 +15,7 @@ export async function POST(request) {
       values: [flightId],
     });
     console.log("Flight check result:", flightCheckResult);
-    console.log("Flight check result:", flightId);
+
     if (flightCheckResult[0].count === 0) {
       return NextResponse.json(
         { message: "FlightID does not exist" },
@@ -48,16 +48,31 @@ export async function POST(request) {
     console.log("User on flight check result:", userOnFlightCheckResult);
 
     if (userOnFlightCheckResult[0].count > 0) {
+      // If user is already checked in, update luggage counts instead of inserting a new row
+      const updateUserOnFlightResult = await executeQuery({
+        query: `UPDATE UserOnFlight SET NoOfCheckIn = ?, NoOfCabin = ? WHERE UserID = ? AND FlightID = ?`,
+        values: [noOfCheckIn, noOfCabin, userId, flightId],
+      });
+
+      console.log("Updated UserOnFlight result:", updateUserOnFlightResult);
+
+      if (updateUserOnFlightResult.affectedRows === 0) {
+        return NextResponse.json(
+          { message: "Failed to update luggage information" },
+          { status: 500 }
+        );
+      }
+
       return NextResponse.json(
-        { message: "User is already checked in for this flight" },
-        { status: 400 }
+        { message: "Check-in luggage information updated successfully" },
+        { status: 200 }
       );
     }
 
     // Insert user on flight information into the UserOnFlight table
     const userOnFlightResult = await executeQuery({
-      query: `INSERT INTO UserOnFlight (UserID, FlightID) VALUES (?, ?)`,
-      values: [userId, flightId],
+      query: `INSERT INTO UserOnFlight (UserID, FlightID, NoOfCheckIn, NoOfCabin) VALUES (?, ?, ?, ?)`,
+      values: [userId, flightId, noOfCheckIn, noOfCabin],
     });
     console.log("User on flight result:", userOnFlightResult);
 
