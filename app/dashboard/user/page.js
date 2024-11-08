@@ -1,6 +1,5 @@
 "use client";
-import { useState } from "react";
-import "react-toastify/dist/ReactToastify.css"; // Import the toast styles
+import { useState ,useEffect} from "react";
 import Link from "next/link";
 import {
   Plane,
@@ -8,34 +7,30 @@ import {
   Briefcase,
   LogOut,
   Menu,
-  Settings,
   BarChart,
   ShoppingBag,
   Bell,
   User,
 } from "lucide-react";
+
 export default function UserDashboard() {
-  const [activeTab, setActiveTab] = useState("status");
+  const [activeTab, setActiveTab] = useState("checkin");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   const renderContent = () => {
     switch (activeTab) {
-      case "status":
-        return <FlightStatus />;
-      case "tickets":
-        return <TicketDetails />;
-      case "info":
-        return <FlightAndAirportInfo />;
-      case "map":
-        return <AirportMap />;
       case "checkin":
         return <CheckIn />;
-      case "alerts":
-        return <FlightAlerts />;
+      case "status":
+        return <FlightStatusAndAlerts />;
+      case "info":
+        return <Information />;
+      case "map":
+        return <AirportMap />;
       default:
-        return <FlightStatus />;
+        return <CheckIn />;
     }
   };
 
@@ -97,66 +92,6 @@ export default function UserDashboard() {
               <a
                 href="#"
                 className={`flex items-center space-x-2 px-4 py-2 ${
-                  activeTab === "status"
-                    ? "bg-blue-100 text-blue-600"
-                    : "text-gray-600 hover:bg-gray-100"
-                }`}
-                onClick={() => {
-                  setActiveTab("status");
-                  setIsSidebarOpen(false);
-                }}
-              >
-                <BarChart className="h-5 w-5" />
-                <span>Flight Status</span>
-              </a>
-              <a
-                href="#"
-                className={`flex items-center space-x-2 px-4 py-2 ${
-                  activeTab === "tickets"
-                    ? "bg-blue-100 text-blue-600"
-                    : "text-gray-600 hover:bg-gray-100"
-                }`}
-                onClick={() => {
-                  setActiveTab("tickets");
-                  setIsSidebarOpen(false);
-                }}
-              >
-                <Plane className="h-5 w-5" />
-                <span>Ticket Details</span>
-              </a>
-              <a
-                href="#"
-                className={`flex items-center space-x-2 px-4 py-2 ${
-                  activeTab === "info"
-                    ? "bg-blue-100 text-blue-600"
-                    : "text-gray-600 hover:bg-gray-100"
-                }`}
-                onClick={() => {
-                  setActiveTab("info");
-                  setIsSidebarOpen(false);
-                }}
-              >
-                <Users className="h-5 w-5" />
-                <span>Flight Information</span>
-              </a>
-              <a
-                href="#"
-                className={`flex items-center space-x-2 px-4 py-2 ${
-                  activeTab === "map"
-                    ? "bg-blue-100 text-blue-600"
-                    : "text-gray-600 hover:bg-gray-100"
-                }`}
-                onClick={() => {
-                  setActiveTab("map");
-                  setIsSidebarOpen(false);
-                }}
-              >
-                <Briefcase className="h-5 w-5" />
-                <span>Airport Map</span>
-              </a>
-              <a
-                href="#"
-                className={`flex items-center space-x-2 px-4 py-2 ${
                   activeTab === "checkin"
                     ? "bg-blue-100 text-blue-600"
                     : "text-gray-600 hover:bg-gray-100"
@@ -172,17 +107,47 @@ export default function UserDashboard() {
               <a
                 href="#"
                 className={`flex items-center space-x-2 px-4 py-2 ${
-                  activeTab === "alerts"
+                  activeTab === "status"
                     ? "bg-blue-100 text-blue-600"
                     : "text-gray-600 hover:bg-gray-100"
                 }`}
                 onClick={() => {
-                  setActiveTab("alerts");
+                  setActiveTab("status");
                   setIsSidebarOpen(false);
                 }}
               >
                 <BarChart className="h-5 w-5" />
-                <span>Flight Alerts</span>
+                <span>Flight Status</span>
+              </a>
+              <a
+                href="#"
+                className={`flex items-center space-x-2 px-4 py-2 ${
+                  activeTab === "info"
+                    ? "bg-blue-100 text-blue-600"
+                    : "text-gray-600 hover:bg-gray-100"
+                }`}
+                onClick={() => {
+                  setActiveTab("info");
+                  setIsSidebarOpen(false);
+                }}
+              >
+                <Users className="h-5 w-5" />
+                <span>Information</span>
+              </a>
+              <a
+                href="#"
+                className={`flex items-center space-x-2 px-4 py-2 ${
+                  activeTab === "map"
+                    ? "bg-blue-100 text-blue-600"
+                    : "text-gray-600 hover:bg-gray-100"
+                }`}
+                onClick={() => {
+                  setActiveTab("map");
+                  setIsSidebarOpen(false);
+                }}
+              >
+                <Briefcase className="h-5 w-5" />
+                <span>Airport Map</span>
               </a>
             </nav>
             <div className="p-4">
@@ -230,103 +195,149 @@ export default function UserDashboard() {
   );
 }
 
-function FlightStatus() {
-  return (
-    <div className="bg-white shadow rounded-lg p-4 md:p-6">
-      <h2 className="text-xl font-semibold mb-4">Flight Status Board</h2>
-      <div className="overflow-x-auto">
-        <table className="min-w-full">
-          <thead>
-            <tr>
-              <th className="px-4 py-2 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Flight
-              </th>
-              <th className="px-4 py-2 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Destination
-              </th>
-              <th className="px-4 py-2 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Time
-              </th>
-              <th className="px-4 py-2 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Status
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td className="px-4 py-2 whitespace-no-wrap border-b border-gray-500">
-                AA1234
-              </td>
-              <td className="px-4 py-2 whitespace-no-wrap border-b border-gray-500">
-                New York (JFK)
-              </td>
-              <td className="px-4 py-2 whitespace-no-wrap border-b border-gray-500">
-                10:00 AM
-              </td>
-              <td className="px-4 py-2 whitespace-no-wrap border-b border-gray-500">
-                <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                  On Time
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
+export function FlightStatusAndAlerts() {
+  const [flights, setFlights] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-function TicketDetails() {
-  return (
-    <div className="bg-white shadow rounded-lg p-4 md:p-6">
-      <h2 className="text-xl font-semibold mb-4">Ticket Details</h2>
-      <div className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Full name
-            </label>
-            <p className="mt-1 text-sm text-gray-900">John Doe</p>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Flight number
-            </label>
-            <p className="mt-1 text-sm text-gray-900">AA1234</p>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Seat
-            </label>
-            <p className="mt-1 text-sm text-gray-900">14A</p>
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Departure
-            </label>
-            <p className="mt-1 text-sm text-gray-900">
-              New York (JFK) - 10:00 AM
-            </p>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Arrival
-            </label>
-            <p className="mt-1 text-sm text-gray-900">
-              Los Angeles (LAX) - 1:00 PM
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+  useEffect(() => {
+    const fetchFlightStatus = async () => {
+      try {
+        const response = await fetch("/api/user/status", {
+          headers: {
+            Authorization: `Bearer ${document.cookie.replace(
+              /(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/,
+              "$1"
+            )}`,
+          },
+        });
 
-function FlightAndAirportInfo() {
+        if (!response.ok) {
+          throw new Error("Failed to fetch flight status");
+        }
+
+        const data = await response.json();
+        setFlights(data);
+        setLoading(false);
+      } catch (error) {
+        setError(error.message);
+        setLoading(false);
+      }
+    };
+
+    fetchFlightStatus();
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+
   return (
     <div className="space-y-6">
+      <div className="bg-white shadow rounded-lg p-4 md:p-6">
+        <h2 className="text-xl font-semibold mb-4">Flight Status Board</h2>
+        <div className="overflow-x-auto">
+          <table className="min-w-full">
+            <thead>
+              <tr>
+                <th className="px-4 py-2 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Flight ID
+                </th>
+                <th className="px-4 py-2 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Destination
+                </th>
+                <th className="px-4 py-2 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Origin
+                </th>
+                <th className="px-4 py-2 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Gate
+                </th>
+                <th className="px-4 py-2 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Belt
+                </th>
+                <th className="px-4 py-2 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Airline
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {flights.map((flight) => (
+                <tr key={flight.ID}>
+                  <td className="px-4 py-2 whitespace-no-wrap border-b border-gray-500">
+                    {flight.ID}
+                  </td>
+                  <td className="px-4 py-2 whitespace-no-wrap border-b border-gray-500">
+                    {flight.Destination}
+                  </td>
+                  <td className="px-4 py-2 whitespace-no-wrap border-b border-gray-500">
+                    {flight.Origin}
+                  </td>
+                  <td className="px-4 py-2 whitespace-no-wrap border-b border-gray-500">
+                    {flight.Gate}
+                  </td>
+                  <td className="px-4 py-2 whitespace-no-wrap border-b border-gray-500">
+                    {flight.Belt}
+                  </td>
+                  <td className="px-4 py-2 whitespace-no-wrap border-b border-gray-500">
+                    {flight.AirlineName}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+
+function Information() {
+  return (
+    <div className="space-y-6">
+      <div className="bg-white shadow rounded-lg p-4 md:p-6">
+        <h2 className="text-xl font-semibold mb-4">Ticket Details</h2>
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Full name
+              </label>
+              <p className="mt-1 text-sm text-gray-900">John Doe</p>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Flight number
+              </label>
+              <p className="mt-1 text-sm text-gray-900">AA1234</p>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Seat
+              </label>
+              <p className="mt-1 text-sm text-gray-900">14A</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Departure
+              </label>
+              <p className="mt-1 text-sm text-gray-900">
+                New York (JFK) - 10:00 AM
+              </p>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Arrival
+              </label>
+              <p className="mt-1 text-sm text-gray-900">
+                Los Angeles (LAX) - 1:00 PM
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
       <div className="bg-white shadow rounded-lg p-4 md:p-6">
         <h2 className="text-xl font-semibold mb-4">Flight Information</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -351,31 +362,6 @@ function FlightAndAirportInfo() {
           </div>
         </div>
       </div>
-      <div className="bg-white shadow rounded-lg p-4 md:p-6">
-        <h2 className="text-xl font-semibold mb-4">Airport Information</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <p>
-              <strong>Airport:</strong> John F. Kennedy International Airport
-              (JFK)
-            </p>
-            <p>
-              <strong>Location:</strong> Queens, New York, USA
-            </p>
-            <p>
-              <strong>Terminal:</strong> Terminal 8
-            </p>
-          </div>
-          <div>
-            <p>
-              <strong>Services:</strong> Restaurants, Duty-free shops, Lounges
-            </p>
-            <p>
-              <strong>Transportation:</strong> Taxi, Bus, Train (AirTrain JFK)
-            </p>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
@@ -396,32 +382,31 @@ function AirportMap() {
 export function CheckIn() {
   const [userId, setUserId] = useState("");
   const [flightId, setFlightId] = useState("");
-  const [baggageType, setBaggageType] = useState("");
-  const [alertMessage, setAlertMessage] = useState(""); // State to handle alert message visibility
+  const [noOfCheckIn, setNoOfCheckIn] = useState(0);  // State for checked-in luggage
+  const [noOfCabin, setNoOfCabin] = useState(0);      // State for carry-on luggage
+  const [alertMessage, setAlertMessage] = useState("");
 
-  const handleBaggageChange = (e) => {
-    setBaggageType(e.target.value);
-  };
-
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!userId || !flightId || !baggageType) {
+
+    // Ensure all required fields are filled out
+    if (!userId || !flightId || noOfCheckIn < 0 || noOfCabin < 0) {
       setAlertMessage("Please fill in all required fields.");
-      setTimeout(() => setAlertMessage(""), 1000); // Hide message after 1 second
+      setTimeout(() => setAlertMessage(""), 3000);  // Display alert for 3 seconds
       return;
     }
 
-    // Prepare the payload
     const payload = {
-      type: baggageType, // Use a single type
       flightId,
       userId,
+      noOfCheckIn,    // Number of checked-in luggage
+      noOfCabin       // Number of carry-on luggage
     };
 
     try {
-      // Send the data to your backend API endpoint
-      const response = await fetch("/api/check-in", {
-        method: "POST",
+      const response = await fetch('/api/user/check-in', {
+        method: 'POST',
         headers: {
           "Content-Type": "application/json",
         },
@@ -430,24 +415,19 @@ export function CheckIn() {
 
       if (!response.ok) {
         const errorData = await response.json();
-
-        setAlertMessage(
-          `Error: ${response.status} ${response.statusText} - ${
-            errorData?.message || "Please try again later."
-          }`
-        );
-        setTimeout(() => setAlertMessage(""), 1000); // Hide message after 1 second
+        setAlertMessage(`Error: ${response.status} ${response.statusText} - ${errorData?.message || 'Please try again later.'}`);
+        setTimeout(() => setAlertMessage(""), 3000);
         return;
       }
 
       const result = await response.json();
-      console.log("Success:", result);
-      setAlertMessage("Check-in successful!");
-      setTimeout(() => setAlertMessage(""), 1000); // Hide message after 1 second
+      console.log('Success:', result);
+      setAlertMessage('Check-in successful!');
+      setTimeout(() => setAlertMessage(""), 3000);
     } catch (error) {
-      console.error("Error:", error);
-      setAlertMessage("There was an error during check-in. Please try again.");
-      setTimeout(() => setAlertMessage(""), 1000); // Hide message after 1 second
+      console.error('Error:', error);
+      setAlertMessage('There was an error during check-in. Please try again.');
+      setTimeout(() => setAlertMessage(""), 3000);
     }
   };
 
@@ -455,7 +435,6 @@ export function CheckIn() {
     <div className="bg-white shadow rounded-lg p-4 md:p-6">
       <h2 className="text-xl font-semibold mb-4">Check-in</h2>
 
-      {/* Display the alert message if exists */}
       {alertMessage && (
         <div className="alert bg-red-500 text-white p-2 rounded-md mb-4">
           {alertMessage}
@@ -463,7 +442,6 @@ export function CheckIn() {
       )}
 
       <form className="space-y-4" onSubmit={handleSubmit}>
-        {/* User ID Input */}
         <div>
           <label
             className="block text-sm font-medium text-gray-700"
@@ -481,7 +459,6 @@ export function CheckIn() {
           />
         </div>
 
-        {/* Flight ID Input */}
         <div>
           <label
             className="block text-sm font-medium text-gray-700"
@@ -499,31 +476,37 @@ export function CheckIn() {
           />
         </div>
 
-        {/* Baggage Type Radio Buttons */}
+        {/* New fields for No of Checked-In and Carry-On Luggage */}
         <div>
-          <label className="block text-lg font-bold text-gray-900">
-            Baggage Type
+          <label className="block text-sm font-medium text-gray-700" htmlFor="noOfCheckIn">
+            Number of Checked-in Luggage
           </label>
-          <div className="mt-2 space-y-2">
-            {["Check-in", "Check-out", "Both", "Other"].map((type) => (
-              <div key={type}>
-                <input
-                  type="radio"
-                  id={type}
-                  name="baggageType"
-                  value={type}
-                  checked={baggageType === type}
-                  onChange={handleBaggageChange}
-                />
-                <label className="ml-2 text-sm text-gray-600" htmlFor={type}>
-                  {type}
-                </label>
-              </div>
-            ))}
-          </div>
+          <input
+            value={noOfCheckIn}
+            onChange={(e) => setNoOfCheckIn(parseInt(e.target.value) || 0)}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            id="noOfCheckIn"
+            type="number"
+            min="0"
+            placeholder="Enter number of checked-in luggage"
+          />
         </div>
 
-        {/* Submit Button */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700" htmlFor="noOfCabin">
+            Number of Carry-On Luggage
+          </label>
+          <input
+            value={noOfCabin}
+            onChange={(e) => setNoOfCabin(parseInt(e.target.value) || 0)}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            id="noOfCabin"
+            type="number"
+            min="0"
+            placeholder="Enter number of carry-on luggage"
+          />
+        </div>
+
         <button
           type="submit"
           className="w-full mt-4 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
@@ -531,40 +514,6 @@ export function CheckIn() {
           Submit
         </button>
       </form>
-    </div>
-  );
-}
-
-function FlightAlerts() {
-  return (
-    <div className="space-y-4">
-      <div
-        className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-lg"
-        role="alert"
-      >
-        <p className="font-bold">Flight Delay</p>
-        <p>
-          Flight AA1234 to Los Angeles (LAX) is delayed by 30 minutes. New
-          departure time: 10:30 AM.
-        </p>
-      </div>
-      <div
-        className="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 rounded-lg"
-        role="alert"
-      >
-        <p className="font-bold">Gate Change</p>
-        <p>Flight BB5678 to Chicago (ORD) has changed gates. New gate: B22.</p>
-      </div>
-      <div
-        className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg"
-        role="alert"
-      >
-        <p className="font-bold">On Time</p>
-        <p>
-          Flight CC9012 to Miami (MIA) is on time. Departure at 2:15 PM from
-          gate C14.
-        </p>
-      </div>
     </div>
   );
 }

@@ -28,20 +28,12 @@ CREATE TABLE Flight (
     FOREIGN KEY (AirlineID) REFERENCES Airline(AirlineID)
 );
 
--- Baggage table
-CREATE TABLE Baggage (
-    Type VARCHAR(50),
-    FlightID INT,
-    UserID INT,
-    PRIMARY KEY (Type, FlightID, UserID),
-    FOREIGN KEY (FlightID) REFERENCES Flight(ID),
-    FOREIGN KEY (UserID) REFERENCES User(ID)
-);
-
 -- Passenger on Flight table
 CREATE TABLE UserOnFlight (
     UserID INT,
     FlightID INT,
+    NoOfCheckIn INT DEFAULT 0,
+    NoOfCabin INT DEFAULT 0,
     PRIMARY KEY (UserID, FlightID),
     FOREIGN KEY (UserID) REFERENCES User(ID),
     FOREIGN KEY (FlightID) REFERENCES Flight(ID)
@@ -118,7 +110,6 @@ CREATE INDEX idx_refresh_token ON RefreshTokens(Token);
 
 -- Add any additional indexes as needed for performance optimization
 CREATE INDEX idx_flight_airline ON Flight(AirlineID);
-CREATE INDEX idx_baggage_flight_user ON Baggage(FlightID, UserID);
 CREATE INDEX idx_user_on_flight ON UserOnFlight(FlightID, UserID);
 CREATE INDEX idx_aircraft_flying_flight ON AircraftFlyingFlight(FlightID, Date);
 CREATE INDEX idx_transaction_user ON Transaction(UserID);
@@ -159,4 +150,3 @@ END;
 //
 
 DELIMITER ;
-
