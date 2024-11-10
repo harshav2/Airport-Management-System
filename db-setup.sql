@@ -107,8 +107,6 @@ CREATE TABLE RefreshTokens (
 
 -- Index for faster token lookups
 CREATE INDEX idx_refresh_token ON RefreshTokens(Token);
-
--- Add any additional indexes as needed for performance optimization
 CREATE INDEX idx_flight_airline ON Flight(AirlineID);
 CREATE INDEX idx_user_on_flight ON UserOnFlight(FlightID, UserID);
 CREATE INDEX idx_aircraft_flying_flight ON AircraftFlyingFlight(FlightID, Date);
@@ -150,3 +148,24 @@ END;
 //
 
 DELIMITER ;
+
+--Airline dummy data
+INSERT INTO Airline (AirlineID, Name) VALUES (5, 'Alaska Airlines');
+INSERT INTO Airline (AirlineID, Name) VALUES (1, 'American Airlines');
+INSERT INTO Airline (AirlineID, Name) VALUES (2, 'Delta Air Lines');
+INSERT INTO Airline (AirlineID, Name) VALUES (8, 'Frontier Airlines');
+INSERT INTO Airline (AirlineID, Name) VALUES (6, 'JetBlue Airways');
+INSERT INTO Airline (AirlineID, Name) VALUES (4, 'Southwest Airlines');
+INSERT INTO Airline (AirlineID, Name) VALUES (7, 'Spirit Airlines');
+INSERT INTO Airline (AirlineID, Name) VALUES (3, 'United Airlines');
+
+
+--Flight dummy data
+INSERT INTO Flight (ID, Gate, Belt, Destination, Origin, AirlineID) VALUES (6, 'A1', 1, 'New York (JFK)', 'Los Angeles (LAX)', 1);
+INSERT INTO Flight (ID, Gate, Belt, Destination, Origin, AirlineID) VALUES (7, 'B2', 2, 'Chicago (ORD)', 'Miami (MIA)', 2);
+INSERT INTO Flight (ID, Gate, Belt, Destination, Origin, AirlineID) VALUES (8, 'C3', 3, 'Dallas (DFW)', 'Seattle (SEA)', 3);
+INSERT INTO Flight (ID, Gate, Belt, Destination, Origin, AirlineID) VALUES (9, 'D4', 4, 'Boston (BOS)', 'Denver (DEN)', 1);
+INSERT INTO Flight (ID, Gate, Belt, Destination, Origin, AirlineID) VALUES (10, 'E5', 5, 'Atlanta (ATL)', 'San Francisco (SFO)', 2);
+
+--
+INSERT INTO UserOnFlight (UserID, FlightID, NoOfCheckIn, NoOfCabin) VALUES (1, 6, 2, 4);
