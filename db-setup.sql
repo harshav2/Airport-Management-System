@@ -1,4 +1,5 @@
 -- Create the database (if it doesn't exist)
+DROP DATABASE IF EXISTS airport_management_system;
 CREATE DATABASE IF NOT EXISTS airport_management_system;
 USE airport_management_system;
 
@@ -47,15 +48,18 @@ CREATE TABLE Aircraft (
     Model VARCHAR(50) NOT NULL
 );
 
--- Aircraft flying Flight table
 CREATE TABLE AircraftFlyingFlight (
     AircraftID INT,
     FlightID INT,
     Date DATE,
+    ArrivalTime TIME,
+    DepartureTime TIME,
+    Status ENUM("On time", "Delayed", "Cancelled")
     PRIMARY KEY (AircraftID, FlightID, Date),
     FOREIGN KEY (AircraftID) REFERENCES Aircraft(ID),
     FOREIGN KEY (FlightID) REFERENCES Flight(ID)
 );
+
 
 -- Stores table
 CREATE TABLE Stores (
@@ -149,23 +153,76 @@ END;
 
 DELIMITER ;
 
---Airline dummy data
-INSERT INTO Airline (AirlineID, Name) VALUES (5, 'Alaska Airlines');
-INSERT INTO Airline (AirlineID, Name) VALUES (1, 'American Airlines');
-INSERT INTO Airline (AirlineID, Name) VALUES (2, 'Delta Air Lines');
-INSERT INTO Airline (AirlineID, Name) VALUES (8, 'Frontier Airlines');
-INSERT INTO Airline (AirlineID, Name) VALUES (6, 'JetBlue Airways');
-INSERT INTO Airline (AirlineID, Name) VALUES (4, 'Southwest Airlines');
-INSERT INTO Airline (AirlineID, Name) VALUES (7, 'Spirit Airlines');
-INSERT INTO Airline (AirlineID, Name) VALUES (3, 'United Airlines');
+-- Airline Table
+INSERT INTO Airline (Name) VALUES 
+    ('Delta Airlines'),
+    ('American Airlines'),
+    ('United Airlines'),
+    ('Southwest Airlines'),
+    ('JetBlue Airways'),
+    ('Alaska Airlines'),
+    ('Spirit Airlines'),
+    ('Frontier Airlines');
 
+-- Aircraft Table
+INSERT INTO Aircraft (TailNumber, DateOfLastMaintenance, Model) VALUES 
+    ('N12345', '2023-10-01', 'Boeing 737'),
+    ('N67890', '2023-09-15', 'Airbus A320'),
+    ('N54321', '2023-08-30', 'Boeing 777'),
+    ('N09876', '2023-07-20', 'Airbus A380'),
+    ('N11223', '2023-06-10', 'Embraer 175');
 
---Flight dummy data
-INSERT INTO Flight (ID, Gate, Belt, Destination, Origin, AirlineID) VALUES (6, 'A1', 1, 'New York (JFK)', 'Los Angeles (LAX)', 1);
-INSERT INTO Flight (ID, Gate, Belt, Destination, Origin, AirlineID) VALUES (7, 'B2', 2, 'Chicago (ORD)', 'Miami (MIA)', 2);
-INSERT INTO Flight (ID, Gate, Belt, Destination, Origin, AirlineID) VALUES (8, 'C3', 3, 'Dallas (DFW)', 'Seattle (SEA)', 3);
-INSERT INTO Flight (ID, Gate, Belt, Destination, Origin, AirlineID) VALUES (9, 'D4', 4, 'Boston (BOS)', 'Denver (DEN)', 1);
-INSERT INTO Flight (ID, Gate, Belt, Destination, Origin, AirlineID) VALUES (10, 'E5', 5, 'Atlanta (ATL)', 'San Francisco (SFO)', 2);
+-- Flight Table
+INSERT INTO Flight (Gate, Belt, Destination, Origin, AirlineID) VALUES 
+    ('A1', 'B1', 'New York (JFK)', 'Los Angeles (LAX)', 1),
+    ('B2', 'B2', 'Chicago (ORD)', 'Miami (MIA)', 2),
+    ('C3', 'B3', 'Dallas (DFW)', 'Seattle (SEA)', 3),
+    ('D4', 'B4', 'Boston (BOS)', 'Denver (DEN)', 4),
+    ('E5', 'B5', 'Atlanta (ATL)', 'San Francisco (SFO)', 5);
 
---
-INSERT INTO UserOnFlight (UserID, FlightID, NoOfCheckIn, NoOfCabin) VALUES (1, 6, 2, 4);
+-- UserOnFlight Table
+INSERT INTO UserOnFlight (UserID, FlightID, NoOfCheckIn, NoOfCabin) VALUES 
+    (1, 6, 2, 1),
+    (2, 7, 1, 2),
+    (3, 8, 1, 1),
+    (4, 9, 2, 2);
+
+-- AircraftFlyingFlight Table
+INSERT INTO AircraftFlyingFlight (AircraftID, FlightID, Date, ArrivalTime, DepartureTime, Status) VALUES 
+    (1, 6, '2023-12-02', '12:30:00', '09:15:00', 'On time'),
+    (2, 7, '2023-12-03', '14:45:00', '11:10:00', 'Delayed'),
+    (3, 8, '2023-12-04', '16:20:00', '13:05:00', 'On time'),
+    (4, 9, '2023-12-05', '18:55:00', '15:30:00', 'Cancelled'),
+    (5, 10, '2023-12-06', '20:40:00', '17:20:00', 'On time');
+
+-- Stores Table
+INSERT INTO Stores (Floor, Building) VALUES 
+    (1, 'Main Terminal'),
+    (2, 'International Terminal'),
+    (3, 'Domestic Terminal'),
+    (1, 'Concourse A'),
+    (2, 'Concourse B');
+
+-- Item Table
+INSERT INTO Item (Name, Type) VALUES 
+    ('Burger', 'Food'),
+    ('Keychain', 'Souvenir'),
+    ('T-shirt', 'Clothing'),
+    ('Headphones', 'Electronics'),
+    ('Water Bottle', 'Other');
+
+-- StallSellsItems Table
+INSERT INTO StallSellsItems (StoreID, ItemName, PricePerUnit, TotalQuantity) VALUES 
+    (1, 'Burger', 5.99, 100),
+    (2, 'Keychain', 2.99, 200),
+    (3, 'T-shirt', 15.99, 150),
+    (4, 'Headphones', 29.99, 50),
+    (5, 'Water Bottle', 3.99, 300);
+
+-- Transaction Table
+INSERT INTO Transaction (Qty, Item_name, UserID, StoreID) VALUES 
+    (2, 'Burger', 1, 1),
+    (1, 'Keychain', 2, 2),
+    (3, 'T-shirt', 3, 3),
+    (1, 'Headphones', 4, 4),
+    (4, 'Water Bottle', 1, 5);

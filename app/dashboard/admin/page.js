@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import SystemOverview from "./overview";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -253,32 +254,6 @@ export default function AdminDashboard() {
           </div>
         </div>
       </footer>
-    </div>
-  );
-}
-
-function SystemOverview() {
-  return (
-    <div>
-      <h2 className="text-xl font-semibold mb-4">System Overview</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded-lg shadow">
-          <h3 className="font-semibold mb-2">Total Flights Today</h3>
-          <p className="text-2xl">127</p>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow">
-          <h3 className="font-semibold mb-2">Active Passengers</h3>
-          <p className="text-2xl">1,542</p>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow">
-          <h3 className="font-semibold mb-2">Total Airlines</h3>
-          <p className="text-2xl">25</p>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow">
-          <h3 className="font-semibold mb-2">System Health</h3>
-          <p className="text-2xl text-green-500">Good</p>
-        </div>
-      </div>
     </div>
   );
 }
