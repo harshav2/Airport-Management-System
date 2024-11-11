@@ -56,9 +56,10 @@ CREATE TABLE AircraftFlyingFlight (
 
 
 CREATE TABLE Stores (
-    StoreID INT PRIMARY KEY,
-    Floor INT NOT NULL,
-    Building VARCHAR(50) NOT NULL
+    StoreID INT AUTO_INCREMENT PRIMARY KEY,
+    UserID INT NOT NULL UNIQUE,
+    Floor INT,
+    Building VARCHAR(50) NOT NULL DEFAULT "Main Terminal"
 );
 
 CREATE TABLE Item (
@@ -113,21 +114,21 @@ BEFORE INSERT ON User
 FOR EACH ROW
 BEGIN
     IF NEW.Username LIKE 'admin%' THEN
-        IF NEW.UserType != 'admin' THEN
+        IF NEW.UserType != 'Admin' THEN
             SIGNAL SQLSTATE '42000'
             SET MESSAGE_TEXT = 'Invalid user type';
         END IF;
     END IF;
     
     IF NEW.Username LIKE 'airline%' THEN
-        IF NEW.UserType != 'airline' THEN
+        IF NEW.UserType != 'Airline' THEN
             SIGNAL SQLSTATE '42000'
             SET MESSAGE_TEXT = 'Invalid user type';
         END IF;
     END IF;
 
     IF NEW.Username LIKE 'store%' THEN
-        IF NEW.UserType != 'store' THEN
+        IF NEW.UserType != 'Store' THEN
             SIGNAL SQLSTATE '42000'
             SET MESSAGE_TEXT = 'Invalid user type';
         END IF;
@@ -140,41 +141,28 @@ BEGIN
         END IF;
     END IF;
 END;
-
 //
 
-DELIMITER ;
-
-DELIMITER $$
-
-CREATE PROCEDURE InsertUser(
-    IN p_UserName VARCHAR(100),
-    IN p_UserType VARCHAR(50)
-)
+CREATE TRIGGER before_user_insert
+AFTER INSERT ON User
+FOR EACH ROW
 BEGIN
-    -- Insert the user into the User table
-    INSERT INTO User (UserName, UserType)
-    VALUES (p_UserName, p_UserType);
-
-    -- Check if the inserted user is a store
-    IF p_UserType = 'Store' THEN
-        -- Get the last inserted UserID (this assumes auto-increment is used)
-        SET @lastUserID = LAST_INSERT_ID();
-        
-        -- Insert the UserID into the Stores table as StoreID
-        INSERT INTO Stores (StoreID)
-        VALUES (@lastUserID);
+    IF NEW.UserType = 'Store' THEN
+        INSERT INTO Stores (UserID) VALUES (NEW.ID);
     END IF;
-END $$
+END //
 
 DELIMITER ;
 
+INSERT INTO user (Name, Username, Password, UserType) VALUES
+    ('admin', 'admin', '$2a$10$5NGE5cGIFAJbPU6FcYvMm.sTkpvVJhY9n56zNRqEpmAVxDM5kte/a', 'Admin'),
+    ('user', 'user', '$2a$10$uiSaHHXxw.0sJG/.B3N5Xui3TQd24dWfzcoXItgDW.5e3YLB8ddOq', 'User'),
+    ('airline', 'airline', '$2a$10$Ws.JorP51pbZ5tREEmZPFOdeKmpfGPnw5xAdoGHXK1TeU9JWBY4v2', 'Airline'),
+    ('store', 'store', '$2a$10$KUYgMmd6kgfPJnbv9FXwouHkJzITJJIE6zsuchHDBgC2b0PPA0WDS', 'Store'),
+    ('store1', 'store1', '$2a$10$zX8m/4zOXsMkCPGLMVll1eKBbkvSZu9S5Np4K2mp5zbz6qOZJnUE.', 'Store'),
+    ('store2', 'store2', '$2a$10$Y.yo0isceeGcXDKwuWSbEezOUIJ1t4yzxU2WZud9T4P5WSULGDj4i', 'Store'),
+    ('store3', 'store3', '$2a$10$nsbibPX.BBS.N8OyP3mNNuZ.F8kNtk.d2f/VsgmmwCaB71Nb1LSE2', 'Store');
 
-INSERT INTO user (ID, Name, Username, Password, UserType) VALUES
-    (1, 'admin', 'admin', '$2a$10$5NGE5cGIFAJbPU6FcYvMm.sTkpvVJhY9n56zNRqEpmAVxDM5kte/a', 'Admin'),
-    (2, 'user', 'user', '$2a$10$uiSaHHXxw.0sJG/.B3N5Xui3TQd24dWfzcoXItgDW.5e3YLB8ddOq', 'User'),
-    (3, 'airline', 'airline', '$2a$10$Ws.JorP51pbZ5tREEmZPFOdeKmpfGPnw5xAdoGHXK1TeU9JWBY4v2', 'Airline'),
-    (4, 'store', 'store', '$2a$10$KUYgMmd6kgfPJnbv9FXwouHkJzITJJIE6zsuchHDBgC2b0PPA0WDS', 'Store');
 
 INSERT INTO Airline (Name) VALUES 
     ('Delta Airlines'),
@@ -213,12 +201,22 @@ INSERT INTO AircraftFlyingFlight (AircraftID, FlightID, Date, ArrivalTime, Depar
     (4, 2, '2023-12-03', '18:55:00', '15:30:00', 'Cancelled', 'D4', 'B4'),
     (5, 3, '2023-12-03', '20:40:00', '17:20:00', 'On time', 'E5', 'B5');
 
-INSERT INTO Stores (Floor, Building) VALUES 
-    (1, 'Main Terminal'),
-    (2, 'International Terminal'),
-    (3, 'Domestic Terminal'),
-    (1, 'Concourse A'),
-    (2, 'Concourse B');
+UPDATE Stores 
+SET Floor = 1, Building = 'Main Terminal'
+WHERE StoreID = 1;
+UPDATE Stores 
+SET Floor = 2, Building = 'International Terminal'
+WHERE StoreID = 2;
+UPDATE Stores 
+SET Floor = 3, Building = 'Domestic Terminal'
+WHERE StoreID = 3;
+UPDATE Stores 
+SET Floor = 1, Building = 'Concourse A'
+WHERE StoreID = 4;
+UPDATE Stores 
+SET Floor = 2, Building = 'Concourse B'
+WHERE StoreID = 5;
+
 
 INSERT INTO Item (Name, Type) VALUES 
     ('Burger', 'Food'),
@@ -232,11 +230,11 @@ INSERT INTO StallSellsItems (StoreID, ItemName, PricePerUnit, TotalQuantity) VAL
     (2, 'Keychain', 2.99, 200),
     (3, 'T-shirt', 15.99, 150),
     (4, 'Headphones', 29.99, 50),
-    (5, 'Water Bottle', 3.99, 300);
+    (3, 'Water Bottle', 3.99, 300);
 
 INSERT INTO Transaction (Qty, Item_name, UserID, StoreID) VALUES 
     (2, 'Burger', 1, 1),
     (1, 'Keychain', 2, 2),
     (3, 'T-shirt', 3, 3),
     (1, 'Headphones', 4, 4),
-    (4, 'Water Bottle', 1, 5);
+    (4, 'Water Bottle', 1, 3);

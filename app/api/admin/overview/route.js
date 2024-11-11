@@ -34,11 +34,17 @@ FROM
 `, //ideally, it should use CURDATE() but since we are working with dummy data, we are giving a date
       values: [],
     });
+    const registeredStores = await executeQuery({
+      query: "SELECT COUNT(*) AS count FROM Stores",
+      values: [],
+    });
+
     console.log(
       totalAirlines,
       totalFlightsToday,
       totalPassengers,
-      currentRevenue
+      currentRevenue,
+      registeredStores
     );
 
     return NextResponse.json({
@@ -46,6 +52,7 @@ FROM
       activePassengers: totalPassengers[0].count,
       totalAirlines: totalAirlines[0].count,
       currentRevenue: currentRevenue[0].TotalRevenue,
+      registeredStores: registeredStores[0].count,
     });
   } catch (error) {
     console.error("Database query error:", error);
