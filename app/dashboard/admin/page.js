@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import SystemOverview from "./overview";
 import FlightManagement from "./flight";
+import PassengerManagement from "./passengers";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -255,61 +256,6 @@ export default function AdminDashboard() {
           </div>
         </div>
       </footer>
-    </div>
-  );
-}
-
-function PassengerManagement() {
-  return (
-    <div>
-      <h2 className="text-xl font-semibold mb-4">Passenger Management</h2>
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white">
-          <thead>
-            <tr>
-              <th className="px-6 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Passenger ID
-              </th>
-              <th className="px-6 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Name
-              </th>
-              <th className="px-6 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Username
-              </th>
-              <th className="px-6 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                User Type
-              </th>
-              <th className="px-6 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-                P001
-              </td>
-              <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-                John Doe
-              </td>
-              <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-                john_doe
-              </td>
-              <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-                User
-              </td>
-              <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-                <button className="text-blue-600 hover:text-blue-800 mr-2">
-                  Edit
-                </button>
-                <button className="text-red-600 hover:text-red-800">
-                  Delete
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
     </div>
   );
 }

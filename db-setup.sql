@@ -7,7 +7,7 @@ CREATE TABLE User (
     Name VARCHAR(50) NOT NULL,
     Username VARCHAR(100) UNIQUE NOT NULL,
     Password VARCHAR(100) NOT NULL,
-    UserType ENUM("Admin","User","Airline","Store") DEFAULT "User"
+    UserType ENUM("Admin","Passenger","Airline","Store") DEFAULT "Passenger"
 );
 
 CREATE TABLE Airline (
@@ -20,7 +20,7 @@ CREATE TABLE Flight (
     Destination VARCHAR(100) NOT NULL,
     Origin VARCHAR(100) NOT NULL,
     AirlineID INT,
-    FOREIGN KEY (AirlineID) REFERENCES Airline(AirlineID)
+    FOREIGN KEY (AirlineID) REFERENCES Airline(AirlineID) ON DELETE CASCADE
 );
 
 CREATE TABLE UserOnFlight (
@@ -29,8 +29,8 @@ CREATE TABLE UserOnFlight (
     NoOfCheckIn INT DEFAULT 0,
     NoOfCabin INT DEFAULT 0,
     PRIMARY KEY (UserID, FlightID),
-    FOREIGN KEY (UserID) REFERENCES User(ID),
-    FOREIGN KEY (FlightID) REFERENCES Flight(ID)
+    FOREIGN KEY (UserID) REFERENCES User(ID) ON DELETE CASCADE,
+    FOREIGN KEY (FlightID) REFERENCES Flight(ID) ON DELETE CASCADE
 );
 
 CREATE TABLE Aircraft (
@@ -50,8 +50,8 @@ CREATE TABLE AircraftFlyingFlight (
     Belt VARCHAR(10),
     Status ENUM("On time", "Delayed", "Cancelled"),
     PRIMARY KEY (AircraftID, FlightID, Date),
-    FOREIGN KEY (AircraftID) REFERENCES Aircraft(ID),
-    FOREIGN KEY (FlightID) REFERENCES Flight(ID)
+    FOREIGN KEY (AircraftID) REFERENCES Aircraft(ID) ON DELETE CASCADE,
+    FOREIGN KEY (FlightID) REFERENCES Flight(ID) ON DELETE CASCADE
 );
 
 
@@ -96,7 +96,7 @@ CREATE TABLE RefreshTokens (
     SessionID VARCHAR(255) NOT NULL,
     ExpiresAt DATETIME NOT NULL,
     CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (UserID) REFERENCES User(ID)
+    FOREIGN KEY (UserID) REFERENCES User(ID) ON DELETE CASCADE
 );
 
 CREATE INDEX idx_refresh_token ON RefreshTokens(Token);
@@ -134,7 +134,7 @@ BEGIN
         END IF;
     END IF;
 
-    IF NEW.UserType = 'User' THEN
+    IF NEW.UserType = 'Passenger' THEN
         IF NEW.Username LIKE 'admin%' OR NEW.Username LIKE 'store%' OR NEW.Username LIKE 'airline%' THEN
             SIGNAL SQLSTATE '42000'
             SET MESSAGE_TEXT = 'Invalid user type';
@@ -156,7 +156,7 @@ DELIMITER ;
 
 INSERT INTO User (Name, Username, Password, UserType) VALUES
     ('admin', 'admin', '$2a$10$5NGE5cGIFAJbPU6FcYvMm.sTkpvVJhY9n56zNRqEpmAVxDM5kte/a', 'Admin'),
-    ('user', 'user', '$2a$10$uiSaHHXxw.0sJG/.B3N5Xui3TQd24dWfzcoXItgDW.5e3YLB8ddOq', 'User'),
+    ('user', 'user', '$2a$10$uiSaHHXxw.0sJG/.B3N5Xui3TQd24dWfzcoXItgDW.5e3YLB8ddOq', 'Passenger'),
     ('airline', 'airline', '$2a$10$Ws.JorP51pbZ5tREEmZPFOdeKmpfGPnw5xAdoGHXK1TeU9JWBY4v2', 'Airline'),
     ('store', 'store', '$2a$10$KUYgMmd6kgfPJnbv9FXwouHkJzITJJIE6zsuchHDBgC2b0PPA0WDS', 'Store'),
     ('store1', 'store1', '$2a$10$zX8m/4zOXsMkCPGLMVll1eKBbkvSZu9S5Np4K2mp5zbz6qOZJnUE.', 'Store'),
