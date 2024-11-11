@@ -195,6 +195,7 @@ export default function UserDashboard() {
   );
 }
 
+
 export function FlightStatusAndAlerts() {
   const [flights, setFlights] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -243,42 +244,36 @@ export function FlightStatusAndAlerts() {
                   Flight ID
                 </th>
                 <th className="px-4 py-2 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Destination
+                  Departure Time
                 </th>
                 <th className="px-4 py-2 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Origin
+                  Destination
                 </th>
                 <th className="px-4 py-2 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Gate
                 </th>
                 <th className="px-4 py-2 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Belt
-                </th>
-                <th className="px-4 py-2 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Airline
+                  Status
                 </th>
               </tr>
             </thead>
             <tbody>
               {flights.map((flight) => (
-                <tr key={flight.ID}>
+                <tr key={flight.FlightID}>
                   <td className="px-4 py-2 whitespace-no-wrap border-b border-gray-500">
-                    {flight.ID}
+                    {flight.FlightID}
+                  </td>
+                  <td className="px-4 py-2 whitespace-no-wrap border-b border-gray-500">
+                    {flight.time} {/* Display time in a readable format */}
                   </td>
                   <td className="px-4 py-2 whitespace-no-wrap border-b border-gray-500">
                     {flight.Destination}
                   </td>
                   <td className="px-4 py-2 whitespace-no-wrap border-b border-gray-500">
-                    {flight.Origin}
-                  </td>
-                  <td className="px-4 py-2 whitespace-no-wrap border-b border-gray-500">
                     {flight.Gate}
                   </td>
                   <td className="px-4 py-2 whitespace-no-wrap border-b border-gray-500">
-                    {flight.Belt}
-                  </td>
-                  <td className="px-4 py-2 whitespace-no-wrap border-b border-gray-500">
-                    {flight.AirlineName}
+                    {flight.Status}
                   </td>
                 </tr>
               ))}
@@ -290,74 +285,93 @@ export function FlightStatusAndAlerts() {
   );
 }
 
+export function Information() {
+  const [flightDetails, setFlightDetails] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+  // Fetch flight details on component mount
+  useEffect(() => {
+    const fetchFlightDetails = async () => {
+      try {
+        const response = await fetch('/api/user/information'); // Replace with your actual API endpoint
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch flight details');
+        }
 
-function Information() {
+        const data = await response.json();
+        setFlightDetails(data);  // Set the flight details from the API response
+      } catch (error) {
+        setError(error.message); // Capture any errors
+      } finally {
+        setLoading(false); // Stop loading after fetch is complete
+      }
+    };
+
+    fetchFlightDetails();
+  }, []); // Empty dependency array means it runs only once after the component mounts
+
+  // If still loading, display a loading message
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  // If there was an error fetching data
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  // If flightDetails are fetched successfully
   return (
     <div className="space-y-6">
+      {/* Ticket Information Section */}
       <div className="bg-white shadow rounded-lg p-4 md:p-6">
         <h2 className="text-xl font-semibold mb-4">Ticket Details</h2>
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Full name
-              </label>
-              <p className="mt-1 text-sm text-gray-900">John Doe</p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Flight number
-              </label>
-              <p className="mt-1 text-sm text-gray-900">AA1234</p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Seat
-              </label>
-              <p className="mt-1 text-sm text-gray-900">14A</p>
-            </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <p>
+              <strong>Full Name:</strong> {flightDetails[0].Username} {/* Dynamic Username */}
+            </p>
+            <p>
+              <strong>Flight ID:</strong> {flightDetails[0].FlightID} {/* Dynamic Flight ID */}
+            </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Departure
-              </label>
-              <p className="mt-1 text-sm text-gray-900">
-                New York (JFK) - 10:00 AM
-              </p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Arrival
-              </label>
-              <p className="mt-1 text-sm text-gray-900">
-                Los Angeles (LAX) - 1:00 PM
-              </p>
-            </div>
+          <div>
+            <p>
+              <strong>Departure:</strong> {flightDetails[0].Origin} at {flightDetails[0].DepartureTime} {/* Dynamic Departure Time */}
+            </p>
+            <p>
+              <strong>Arrival:</strong> {flightDetails[0].Destination} at {flightDetails[0].ArrivalTime} {/* Dynamic Arrival Time */}
+            </p>
           </div>
         </div>
       </div>
+
+      {/* Flight Information Section */}
       <div className="bg-white shadow rounded-lg p-4 md:p-6">
         <h2 className="text-xl font-semibold mb-4">Flight Information</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <p>
-              <strong>Flight:</strong> AA1234
+              <strong>Airline:</strong> {flightDetails[0].Airline} {/* Dynamic Airline Name */}
             </p>
             <p>
-              <strong>Departure:</strong> New York (JFK) at 10:00 AM
+              <strong>Departure:</strong> {flightDetails[0].Origin} at {flightDetails[0].DepartureTime}
             </p>
             <p>
-              <strong>Arrival:</strong> Los Angeles (LAX) at 1:00 PM
+              <strong>Arrival:</strong> {flightDetails[0].Destination} at {flightDetails[0].ArrivalTime}
             </p>
           </div>
           <div>
             <p>
-              <strong>Duration:</strong> 6 hours
+              <strong>Aircraft:</strong> {flightDetails[0].AircraftModel} {/* Dynamic Aircraft Model */}
             </p>
             <p>
-              <strong>Aircraft:</strong> Boeing 787 Dreamliner
+              <strong>Gate:</strong> {flightDetails[0].Gate} {/* Dynamic Gate */}
+            </p>
+            <p>
+              <strong>Belt:</strong> {flightDetails[0].Belt} {/* Dynamic Belt */}
             </p>
           </div>
         </div>
@@ -365,6 +379,7 @@ function Information() {
     </div>
   );
 }
+
 
 function AirportMap() {
   return (
