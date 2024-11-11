@@ -63,7 +63,7 @@ export default function SystemOverview() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Active Passengers
+              Total Passengers
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -78,6 +78,24 @@ export default function SystemOverview() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{data?.totalAirlines}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Registered Stores
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{data?.activePassengers}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Revenue Today</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{data?.activePassengers}</div>
           </CardContent>
         </Card>
       </div>

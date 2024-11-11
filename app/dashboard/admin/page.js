@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import SystemOverview from "./overview";
+import FlightManagement from "./flight";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -254,64 +255,6 @@ export default function AdminDashboard() {
           </div>
         </div>
       </footer>
-    </div>
-  );
-}
-
-function FlightManagement() {
-  return (
-    <div>
-      <h2 className="text-xl font-semibold mb-4">Flight Management</h2>
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white">
-          <thead>
-            <tr>
-              <th className="px-6 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Flight ID
-              </th>
-              <th className="px-6 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Gate
-              </th>
-              <th className="px-6 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold  text-gray-600 uppercase tracking-wider">
-                Destination
-              </th>
-              <th className="px-6 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Origin
-              </th>
-              <th className="px-6 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Airline
-              </th>
-              <th className="px-6 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-                FL001
-              </td>
-              <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-                A1
-              </td>
-              <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-                New York (JFK)
-              </td>
-              <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-                London (LHR)
-              </td>
-              <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-                British Airways
-              </td>
-              <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-                <button className="text-blue-600 hover:text-blue-800">
-                  Edit
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
     </div>
   );
 }

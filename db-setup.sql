@@ -17,8 +17,6 @@ CREATE TABLE Airline (
 
 CREATE TABLE Flight (
     ID INT AUTO_INCREMENT PRIMARY KEY,
-    Gate VARCHAR(10),
-    Belt VARCHAR(10),
     Destination VARCHAR(100) NOT NULL,
     Origin VARCHAR(100) NOT NULL,
     AirlineID INT,
@@ -48,6 +46,8 @@ CREATE TABLE AircraftFlyingFlight (
     Date DATE,
     ArrivalTime TIME,
     DepartureTime TIME,
+    Gate VARCHAR(10),
+    Belt VARCHAR(10),
     Status ENUM("On time", "Delayed", "Cancelled"),
     PRIMARY KEY (AircraftID, FlightID, Date),
     FOREIGN KEY (AircraftID) REFERENCES Aircraft(ID),
@@ -168,12 +168,12 @@ INSERT INTO Aircraft (TailNumber, DateOfLastMaintenance, Model) VALUES
     ('N09876', '2023-07-20', 'Airbus A380'),
     ('N11223', '2023-06-10', 'Embraer 175');
 
-INSERT INTO Flight (Gate, Belt, Destination, Origin, AirlineID) VALUES 
-    ('A1', 'B1', 'New York (JFK)', 'Los Angeles (LAX)', 1),
-    ('B2', 'B2', 'Chicago (ORD)', 'Miami (MIA)', 2),
-    ('C3', 'B3', 'Dallas (DFW)', 'Seattle (SEA)', 3),
-    ('D4', 'B4', 'Boston (BOS)', 'Denver (DEN)', 4),
-    ('E5', 'B5', 'Atlanta (ATL)', 'San Francisco (SFO)', 5);
+INSERT INTO Flight (Destination, Origin, AirlineID) VALUES 
+    ('New York (JFK)', 'Los Angeles (LAX)', 1),
+    ('Miami (MIA)', 'New York (JFK)', 2),
+    ('New York (JFK)', 'Seattle (SEA)', 3),
+    ('Boston (BOS)', 'New York (JFK)', 4),
+    ('New York (JFK)', 'San Francisco (SFO)', 5);
 
 INSERT INTO UserOnFlight (UserID, FlightID, NoOfCheckIn, NoOfCabin) VALUES 
     (1, 2, 2, 1),
@@ -181,12 +181,12 @@ INSERT INTO UserOnFlight (UserID, FlightID, NoOfCheckIn, NoOfCabin) VALUES
     (3, 4, 1, 1),
     (4, 3, 2, 2);
 
-INSERT INTO AircraftFlyingFlight (AircraftID, FlightID, Date, ArrivalTime, DepartureTime, Status) VALUES 
-    (1, 4, '2023-12-02', '12:30:00', '09:15:00', 'On time'),
-    (2, 5, '2023-12-03', '14:45:00', '11:10:00', 'Delayed'),
-    (3, 1, '2023-12-04', '16:20:00', '13:05:00', 'On time'),
-    (4, 2, '2023-12-03', '18:55:00', '15:30:00', 'Cancelled'),
-    (5, 3, '2023-12-03', '20:40:00', '17:20:00', 'On time');
+INSERT INTO AircraftFlyingFlight (AircraftID, FlightID, Date, ArrivalTime, DepartureTime, Status, Gate, Belt) VALUES 
+    (1, 4, '2023-12-02', '12:30:00', '09:15:00', 'On time', 'A1', 'B1'),
+    (2, 5, '2023-12-03', '14:45:00', '11:10:00', 'Delayed', 'B2', 'B2'),
+    (3, 1, '2023-12-04', '16:20:00', '13:05:00', 'On time', 'C3', 'B3'),
+    (4, 2, '2023-12-03', '18:55:00', '15:30:00', 'Cancelled', 'D4', 'B4'),
+    (5, 3, '2023-12-03', '20:40:00', '17:20:00', 'On time', 'E5', 'B5');
 
 INSERT INTO Stores (Floor, Building) VALUES 
     (1, 'Main Terminal'),
