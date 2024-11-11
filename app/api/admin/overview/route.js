@@ -8,11 +8,11 @@ export async function GET() {
       values: [],
     });
     const totalPassengers = await executeQuery({
-      query: "SELECT COUNT(*) as count FROM User WHERE UserType = 'user'",
+      query: "SELECT COUNT(*) as count FROM User WHERE UserType = 'User'",
       values: [],
     });
     const totalAirlines = await executeQuery({
-      query: "SELECT COUNT(*) as count FROM airlines",
+      query: "SELECT COUNT(*) as count FROM Airline",
       values: [],
     });
     // Close the database connection
