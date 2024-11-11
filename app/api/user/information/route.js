@@ -35,37 +35,49 @@ export async function GET(request) {
     // Log the userId from the decoded token for debugging
     console.log("Decoded userId:", decodedToken.userId);
 
-    // Fetch flight details for the user from the `UserOnFlight` and `AircraftFlyingFlight` tables
-    const flights = await executeQuery({
-      query: `
+    // Fetch user ticket information and flight details
+    const ticketDetails = await executeQuery({
+        query: `
         SELECT 
-          aff.FlightID,
-          aff.DepartureTime AS time,
+          u.ID AS UserID,
+          u.Username,
+          a.Name AS Airline,
+          f.ID AS FlightID,  -- Adding FlightID to the query
           f.Destination,
+          f.Origin,
+          ac.Model AS AircraftModel,
+          aff.DepartureTime,
+          aff.ArrivalTime,
           aff.Gate,
-          aff.Status
+          aff.Belt
         FROM 
           UserOnFlight uof
+        JOIN 
+          User u ON uof.UserID = u.ID
         JOIN 
           Flight f ON uof.FlightID = f.ID
         JOIN 
           AircraftFlyingFlight aff ON aff.FlightID = f.ID
+        JOIN 
+          Aircraft ac ON aff.AircraftID = ac.ID
+        JOIN 
+          Airline a ON f.AirlineID = a.AirlineID
         WHERE 
           uof.UserID = ?; -- Replace ? with the specific UserID
       `,
-      values: [decodedToken.userId],  // Use userId from the token to fetch their flights
+      values: [decodedToken.userId],  // Use userId from the token to fetch their tickets
     });
 
-    // If no flights are found for the user, respond with a 404 status
-    if (!flights || flights.length === 0) {
+    // If no tickets are found for the user, respond with a 404 status
+    if (!ticketDetails || ticketDetails.length === 0) {
       return NextResponse.json(
-        { message: "No flights found for the user" },
+        { message: "No ticket information found for the user" },
         { status: 404 }
       );
     }
 
-    // Respond with the fetched flight data, including only the necessary fields
-    return NextResponse.json(flights);
+    // Respond with the fetched ticket and flight data
+    return NextResponse.json(ticketDetails);
   } catch (error) {
     console.error("Token verification or database query error:", error);
     // Handle unexpected errors
