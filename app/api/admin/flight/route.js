@@ -23,7 +23,6 @@ export async function GET() {
       `,
       values: [],
     });
-    console.log(flights);
     return NextResponse.json({
       flights: flights,
     });
@@ -39,21 +38,17 @@ export async function GET() {
 export async function PATCH(request) {
   try {
     let id, status;
-
-    // First, try to parse the JSON body
     try {
       const body = await request.json();
       ({ id, status } = body);
     } catch (jsonError) {
       console.error("JSON parsing error:", jsonError);
 
-      // If JSON parsing fails, try to get data from URL parameters
       const url = new URL(request.url);
       id = url.searchParams.get("id");
       status = url.searchParams.get("status");
     }
 
-    // Validate input
     if (!id || !status) {
       return NextResponse.json(
         { error: "Missing required fields: id and status" },
@@ -61,7 +56,6 @@ export async function PATCH(request) {
       );
     }
 
-    // Validate status
     const validStatuses = ["On time", "Delayed", "Cancelled"];
     if (!validStatuses.includes(status)) {
       return NextResponse.json(
@@ -72,7 +66,6 @@ export async function PATCH(request) {
       );
     }
 
-    // Update flight status
     const result = await executeQuery({
       query: `
         UPDATE AircraftFlyingFlight
@@ -81,7 +74,6 @@ export async function PATCH(request) {
       `,
       values: [status, id],
     });
-    console.log(result);
 
     if (result.affectedRows === 0) {
       return NextResponse.json(

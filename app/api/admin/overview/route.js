@@ -39,14 +39,6 @@ FROM
       values: [],
     });
 
-    console.log(
-      totalAirlines,
-      totalFlightsToday,
-      totalPassengers,
-      currentRevenue,
-      registeredStores
-    );
-
     return NextResponse.json({
       totalFlights: totalFlightsToday[0].count,
       activePassengers: totalPassengers[0].count,
