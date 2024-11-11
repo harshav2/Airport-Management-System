@@ -5,9 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 
 export default function SystemOverview() {
-  const [totalFlights, SetTotalFlights] = useState(0);
-  const [activePassengers, setActivePassengers] = useState(0);
-  const [totalAirlines, SetTotalAirlines] = useState(0);
+  const [status, setStatus] = useState(false);
+  const [data, setData] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -15,12 +14,12 @@ export default function SystemOverview() {
     const fetchData = async () => {
       try {
         const response = await fetch("/api/admin/overview");
-        console.log(response);
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }
         const result = await response.json();
-        console.log(result);
+        setData(result);
+        setStatus(true);
       } catch (err) {
         setError("An error occurred while fetching data");
       } finally {
@@ -39,7 +38,7 @@ export default function SystemOverview() {
     );
   }
 
-  if (error) {
+  if (!status) {
     return (
       <div className="text-red-500 text-center" role="alert">
         {error}

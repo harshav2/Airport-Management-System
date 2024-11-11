@@ -185,8 +185,8 @@ INSERT INTO AircraftFlyingFlight (AircraftID, FlightID, Date, ArrivalTime, Depar
     (1, 4, '2023-12-02', '12:30:00', '09:15:00', 'On time'),
     (2, 5, '2023-12-03', '14:45:00', '11:10:00', 'Delayed'),
     (3, 1, '2023-12-04', '16:20:00', '13:05:00', 'On time'),
-    (4, 2, '2023-12-05', '18:55:00', '15:30:00', 'Cancelled'),
-    (5, 3, '2023-12-06', '20:40:00', '17:20:00', 'On time');
+    (4, 2, '2023-12-03', '18:55:00', '15:30:00', 'Cancelled'),
+    (5, 3, '2023-12-03', '20:40:00', '17:20:00', 'On time');
 
 INSERT INTO Stores (Floor, Building) VALUES 
     (1, 'Main Terminal'),
