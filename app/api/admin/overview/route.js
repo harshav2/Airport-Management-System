@@ -15,12 +15,37 @@ export async function GET() {
       query: "SELECT COUNT(*) as count FROM Airline",
       values: [],
     });
-    console.log(totalAirlines, totalFlightsToday, totalPassengers);
-    // Return the data as JSON
+    const currentRevenue = await executeQuery({
+      query: `
+SELECT 
+    IFNULL(SUM(Qty * PricePerUnit), 0) AS TotalRevenue
+FROM 
+    (
+        SELECT 
+            t.Qty, 
+            s.PricePerUnit
+        FROM 
+            transaction t
+        JOIN 
+            stallsellsitems s ON t.Item_name = s.ItemName AND t.StoreID = s.StoreID
+        WHERE 
+            DATE(t.Timestamp) = '2024-11-11'  
+    ) AS RevenueData;
+`, //ideally, it should use CURDATE() but since we are working with dummy data, we are giving a date
+      values: [],
+    });
+    console.log(
+      totalAirlines,
+      totalFlightsToday,
+      totalPassengers,
+      currentRevenue
+    );
+
     return NextResponse.json({
       totalFlights: totalFlightsToday[0].count,
       activePassengers: totalPassengers[0].count,
       totalAirlines: totalAirlines[0].count,
+      currentRevenue: currentRevenue[0].TotalRevenue,
     });
   } catch (error) {
     console.error("Database query error:", error);

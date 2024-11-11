@@ -56,7 +56,7 @@ CREATE TABLE AircraftFlyingFlight (
 
 
 CREATE TABLE Stores (
-    StoreID INT AUTO_INCREMENT PRIMARY KEY,
+    StoreID INT PRIMARY KEY,
     Floor INT NOT NULL,
     Building VARCHAR(50) NOT NULL
 );
@@ -115,28 +115,28 @@ BEGIN
     IF NEW.Username LIKE 'admin%' THEN
         IF NEW.UserType != 'admin' THEN
             SIGNAL SQLSTATE '42000'
-            SET MESSAGE_TEXT = 'Invalid login type';
+            SET MESSAGE_TEXT = 'Invalid user type';
         END IF;
     END IF;
     
     IF NEW.Username LIKE 'airline%' THEN
         IF NEW.UserType != 'airline' THEN
             SIGNAL SQLSTATE '42000'
-            SET MESSAGE_TEXT = 'Invalid login type';
+            SET MESSAGE_TEXT = 'Invalid user type';
         END IF;
     END IF;
 
     IF NEW.Username LIKE 'store%' THEN
         IF NEW.UserType != 'store' THEN
             SIGNAL SQLSTATE '42000'
-            SET MESSAGE_TEXT = 'Invalid login type';
+            SET MESSAGE_TEXT = 'Invalid user type';
         END IF;
     END IF;
 
     IF NEW.UserType = 'User' THEN
         IF NEW.Username LIKE 'admin%' OR NEW.Username LIKE 'store%' OR NEW.Username LIKE 'airline%' THEN
             SIGNAL SQLSTATE '42000'
-            SET MESSAGE_TEXT = 'Invalid login type';
+            SET MESSAGE_TEXT = 'Invalid user type';
         END IF;
     END IF;
 END;
@@ -144,6 +144,31 @@ END;
 //
 
 DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE InsertUser(
+    IN p_UserName VARCHAR(100),
+    IN p_UserType VARCHAR(50)
+)
+BEGIN
+    -- Insert the user into the User table
+    INSERT INTO User (UserName, UserType)
+    VALUES (p_UserName, p_UserType);
+
+    -- Check if the inserted user is a store
+    IF p_UserType = 'Store' THEN
+        -- Get the last inserted UserID (this assumes auto-increment is used)
+        SET @lastUserID = LAST_INSERT_ID();
+        
+        -- Insert the UserID into the Stores table as StoreID
+        INSERT INTO Stores (StoreID)
+        VALUES (@lastUserID);
+    END IF;
+END $$
+
+DELIMITER ;
+
 
 INSERT INTO user (ID, Name, Username, Password, UserType) VALUES
     (1, 'admin', 'admin', '$2a$10$5NGE5cGIFAJbPU6FcYvMm.sTkpvVJhY9n56zNRqEpmAVxDM5kte/a', 'Admin'),

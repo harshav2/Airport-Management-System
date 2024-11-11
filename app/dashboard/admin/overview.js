@@ -95,7 +95,7 @@ export default function SystemOverview() {
             <CardTitle className="text-sm font-medium">Revenue Today</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{data?.activePassengers}</div>
+            <div className="text-2xl font-bold">{data?.currentRevenue}</div>
           </CardContent>
         </Card>
       </div>
