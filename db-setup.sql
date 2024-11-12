@@ -158,7 +158,7 @@ END //
 
 DELIMITER ;
 
-INSERT INTO user (ID, Name, Username, Password, UserType) VALUES
+INSERT INTO User (ID, Name, Username, Password, UserType) VALUES
     (1, 'admin', 'admin', '$2a$10$5NGE5cGIFAJbPU6FcYvMm.sTkpvVJhY9n56zNRqEpmAVxDM5kte/a', 'Admin'),
     (2, 'user', 'user', '$2a$10$uiSaHHXxw.0sJG/.B3N5Xui3TQd24dWfzcoXItgDW.5e3YLB8ddOq', 'Passenger'),
     (3, 'airline', 'airline', '$2a$10$Ws.JorP51pbZ5tREEmZPFOdeKmpfGPnw5xAdoGHXK1TeU9JWBY4v2', 'Airline'),
