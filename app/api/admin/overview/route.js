@@ -25,9 +25,9 @@ FROM
             t.Qty, 
             s.PricePerUnit
         FROM 
-            transaction t
+            Transaction t
         JOIN 
-            stallsellsitems s ON t.Item_name = s.ItemName AND t.StoreID = s.StoreID
+            StallSellsItems s ON t.Item_name = s.ItemName AND t.StoreID = s.StoreID
         WHERE 
             DATE(t.Timestamp) = '2024-11-11'  
     ) AS RevenueData;
