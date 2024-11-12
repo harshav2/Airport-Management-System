@@ -12,7 +12,9 @@ CREATE TABLE User (
 
 CREATE TABLE Airline (
     AirlineID INT AUTO_INCREMENT PRIMARY KEY,
-    Name VARCHAR(100) NOT NULL UNIQUE
+    UserID INT,
+    Name VARCHAR(100) NOT NULL UNIQUE,
+    FOREIGN KEY (UserID) REFERENCES User(ID) ON DELETE CASCADE
 );
 
 CREATE TABLE Flight (
@@ -113,22 +115,22 @@ CREATE TRIGGER usertype_check
 BEFORE INSERT ON User
 FOR EACH ROW
 BEGIN
-    IF NEW.Username LIKE 'admin%' THEN
-        IF NEW.UserType != 'Admin' THEN
+    IF NEW.UserType = 'Admin' THEN
+        IF NEW.Username NOT LIKE 'admin%' THEN
             SIGNAL SQLSTATE '42000'
             SET MESSAGE_TEXT = 'Invalid user type';
         END IF;
     END IF;
     
-    IF NEW.Username LIKE 'airline%' THEN
-        IF NEW.UserType != 'Airline' THEN
+    IF NEW.UserType = 'Airline' THEN
+        IF NEW.Username NOT LIKE 'airline%' THEN
             SIGNAL SQLSTATE '42000'
             SET MESSAGE_TEXT = 'Invalid user type';
         END IF;
     END IF;
 
-    IF NEW.Username LIKE 'store%' THEN
-        IF NEW.UserType != 'Store' THEN
+    IF NEW.UserType = 'Store' THEN
+        IF NEW.Username NOT LIKE 'store%' THEN
             SIGNAL SQLSTATE '42000'
             SET MESSAGE_TEXT = 'Invalid user type';
         END IF;
@@ -143,36 +145,32 @@ BEGIN
 END;
 //
 
-CREATE TRIGGER before_user_insert
+CREATE TRIGGER other_insert
 AFTER INSERT ON User
 FOR EACH ROW
 BEGIN
-    IF NEW.UserType = 'Store' THEN
+    IF NEW.UserType = 'Airline' THEN
+        INSERT INTO Airline (UserID, Name) VALUES (NEW.ID, NEW.Name);
+    ELSEIF NEW.UserType = 'Store' THEN
         INSERT INTO Stores (UserID) VALUES (NEW.ID);
     END IF;
 END //
 
 DELIMITER ;
 
-INSERT INTO User (Name, Username, Password, UserType) VALUES
-    ('admin', 'admin', '$2a$10$5NGE5cGIFAJbPU6FcYvMm.sTkpvVJhY9n56zNRqEpmAVxDM5kte/a', 'Admin'),
-    ('user', 'user', '$2a$10$uiSaHHXxw.0sJG/.B3N5Xui3TQd24dWfzcoXItgDW.5e3YLB8ddOq', 'Passenger'),
-    ('airline', 'airline', '$2a$10$Ws.JorP51pbZ5tREEmZPFOdeKmpfGPnw5xAdoGHXK1TeU9JWBY4v2', 'Airline'),
-    ('store', 'store', '$2a$10$KUYgMmd6kgfPJnbv9FXwouHkJzITJJIE6zsuchHDBgC2b0PPA0WDS', 'Store'),
-    ('store1', 'store1', '$2a$10$zX8m/4zOXsMkCPGLMVll1eKBbkvSZu9S5Np4K2mp5zbz6qOZJnUE.', 'Store'),
-    ('store2', 'store2', '$2a$10$Y.yo0isceeGcXDKwuWSbEezOUIJ1t4yzxU2WZud9T4P5WSULGDj4i', 'Store'),
-    ('store3', 'store3', '$2a$10$nsbibPX.BBS.N8OyP3mNNuZ.F8kNtk.d2f/VsgmmwCaB71Nb1LSE2', 'Store');
+INSERT INTO user (ID, Name, Username, Password, UserType) VALUES
+    (1, 'admin', 'admin', '$2a$10$5NGE5cGIFAJbPU6FcYvMm.sTkpvVJhY9n56zNRqEpmAVxDM5kte/a', 'Admin'),
+    (2, 'user', 'user', '$2a$10$uiSaHHXxw.0sJG/.B3N5Xui3TQd24dWfzcoXItgDW.5e3YLB8ddOq', 'Passenger'),
+    (3, 'airline', 'airline', '$2a$10$Ws.JorP51pbZ5tREEmZPFOdeKmpfGPnw5xAdoGHXK1TeU9JWBY4v2', 'Airline'),
+    (4, 'store', 'store', '$2a$10$KUYgMmd6kgfPJnbv9FXwouHkJzITJJIE6zsuchHDBgC2b0PPA0WDS', 'Store'),
+    (5, 'store1', 'store1', '$2a$10$zX8m/4zOXsMkCPGLMVll1eKBbkvSZu9S5Np4K2mp5zbz6qOZJnUE.', 'Store'),
+    (6, 'store2', 'store2', '$2a$10$Y.yo0isceeGcXDKwuWSbEezOUIJ1t4yzxU2WZud9T4P5WSULGDj4i', 'Store'),
+    (7, 'store3', 'store3', '$2a$10$nsbibPX.BBS.N8OyP3mNNuZ.F8kNtk.d2f/VsgmmwCaB71Nb1LSE2', 'Store'),
+    (8, 'airline2', 'airline2', '$2a$10$fhyEGldxbFNcXqyeSFv.i.tSI18w4wnmgjfvj1f2OKzrr9hRfD9O6', 'Airline'),
+    (9, 'airline3', 'airline3', '$2a$10$H8CRA0RpaDz7pak0k67N0ORRWeDIPH6GTczXG0hCgxelA.serI.Qi', 'Airline'),
+    (10, 'airline4', 'airline4', '$2a$10$yoC39Rw4x2W8IUUnxHn/VOV63aM31I54.0voF4Jbu1SwWtgWCFkOW', 'Airline'),
+    (11, 'airline5', 'airline5', '$2a$10$8XtpSbWQFcKNAB2HhbV.leVq.yYdFWdKF2FVTIi9jUBN3T/Sx7gkS', 'Airline');
 
-
-INSERT INTO Airline (Name) VALUES 
-    ('Delta Airlines'),
-    ('American Airlines'),
-    ('United Airlines'),
-    ('Southwest Airlines'),
-    ('JetBlue Airways'),
-    ('Alaska Airlines'),
-    ('Spirit Airlines'),
-    ('Frontier Airlines');
 
 INSERT INTO Aircraft (TailNumber, DateOfLastMaintenance, Model) VALUES 
     ('N12345', '2023-10-01', 'Boeing 737'),

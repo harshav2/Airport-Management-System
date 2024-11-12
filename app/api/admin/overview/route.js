@@ -8,7 +8,7 @@ export async function GET() {
       values: [],
     });
     const totalPassengers = await executeQuery({
-      query: "SELECT COUNT(*) as count FROM User WHERE UserType = 'User'",
+      query: "SELECT COUNT(*) as count FROM User WHERE UserType = 'Passenger'",
       values: [],
     });
     const totalAirlines = await executeQuery({
@@ -29,9 +29,9 @@ FROM
         JOIN 
             StallSellsItems s ON t.Item_name = s.ItemName AND t.StoreID = s.StoreID
         WHERE 
-            DATE(t.Timestamp) = '2024-11-11'  
+            DATE(t.Timestamp) = CURDATE()  
     ) AS RevenueData;
-`, //ideally, it should use CURDATE() but since we are working with dummy data, we are giving a date
+`,
       values: [],
     });
     const registeredStores = await executeQuery({

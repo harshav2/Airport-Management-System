@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import SystemOverview from "./overview";
 import FlightManagement from "./flight";
+import AirlineManagement from "./airline";
 import PassengerManagement from "./passengers";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -16,7 +17,6 @@ import {
   BarChart,
   ShoppingBag,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -24,24 +24,6 @@ export default function AdminDashboard() {
   const router = useRouter();
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
-
-  const handleLogout = async () => {
-    try {
-      const response = await fetch("/api/logout", {
-        method: "POST",
-      });
-
-      if (response.ok) {
-        router.push("/login");
-      } else {
-        console.error("Logout failed");
-        alert("Logout failed. Please try again.");
-      }
-    } catch (error) {
-      console.error("Logout error:", error);
-      alert("An error occurred during logout. Please try again.");
-    }
-  };
 
   const renderContent = () => {
     switch (activeTab) {
@@ -84,18 +66,15 @@ export default function AdminDashboard() {
               </Link>
             </div>
             <nav className="hidden md:flex space-x-4">
-              <Link
-                className="text-sm font-medium hover:text-blue-600"
-                href="#"
-              >
-                Help
-              </Link>
-              <Link
-                className="text-sm font-medium hover:text-blue-600"
-                href="#"
-              >
-                Profile
-              </Link>
+              <div className="p-4">
+                <Link
+                  href="/"
+                  className="flex items-center space-x-2 text-gray-600 hover:text-gray-900"
+                >
+                  <LogOut className="h-5 w-5" />
+                  <span>Logout</span>
+                </Link>
+              </div>
             </nav>
           </div>
         </div>
@@ -216,13 +195,13 @@ export default function AdminDashboard() {
               </a>
             </nav>
             <div className="p-4">
-              <Button
-                onClick={handleLogout}
+              <Link
+                href="/"
                 className="flex items-center space-x-2 text-gray-600 hover:text-gray-900"
               >
                 <LogOut className="h-5 w-5" />
                 <span>Logout</span>
-              </Button>
+              </Link>
             </div>
           </div>
         </aside>
@@ -256,49 +235,6 @@ export default function AdminDashboard() {
           </div>
         </div>
       </footer>
-    </div>
-  );
-}
-
-function AirlineManagement() {
-  return (
-    <div>
-      <h2 className="text-xl font-semibold mb-4">Airline Management</h2>
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white">
-          <thead>
-            <tr>
-              <th className="px-6 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Airline ID
-              </th>
-              <th className="px-6 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Name
-              </th>
-              <th className="px-6 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-                AL001
-              </td>
-              <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-                British Airways
-              </td>
-              <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-                <button className="text-blue-600 hover:text-blue-800 mr-2">
-                  Edit
-                </button>
-                <button className="text-red-600 hover:text-red-800">
-                  Delete
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
     </div>
   );
 }

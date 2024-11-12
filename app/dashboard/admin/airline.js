@@ -1,66 +1,61 @@
-"use client";
-
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
 
-export default function PassengerManagement() {
-  const [passengers, setPassengers] = useState([]);
+export default function AirlineManagement() {
+  const [airlines, setAirlines] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [newPassenger, setNewPassenger] = useState({
+  const [newAirline, setNewAirline] = useState({
     name: "",
     username: "",
     password: "",
-    userType: "Passenger",
+    userType: "Airline",
   });
 
   useEffect(() => {
-    fetchPassengers();
+    fetchAirlines();
   }, []);
 
-  const fetchPassengers = async () => {
+  const fetchAirlines = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/admin/passengers");
+      const response = await fetch("/api/admin/airlines");
       if (!response.ok) {
-        throw new Error("Failed to fetch passengers");
+        throw new Error("Failed to fetch airlines");
       }
       const data = await response.json();
-      setPassengers(data.passengers);
+      setAirlines(data.airlines);
     } catch (err) {
-      setError("Error fetching passengers. Please try again later.");
+      setError("Error fetching airlines. Please try again later.");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDelete = async (passengerId) => {
-    if (window.confirm("Are you sure you want to delete this passenger?")) {
+  const handleDelete = async (airline) => {
+    if (window.confirm("Are you sure you want to delete this airline?")) {
       try {
-        const response = await fetch("/api/admin/passengers", {
+        const response = await fetch("/api/admin/airlines", {
           method: "DELETE",
-          body: JSON.stringify({ passengerId: passengerId }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ airline }), // Send AirlineID for deletion
         });
+
         if (!response.ok) {
-          throw new Error("Failed to delete passenger");
+          throw new Error("Failed to delete airline");
         }
-        fetchPassengers();
+
+        fetchAirlines();
       } catch (err) {
-        setError("Error deleting passenger. Please try again.");
+        setError("Error deleting airline. Please try again.");
       }
     }
   };
 
-  const handleAddPassenger = async (e) => {
+  const handleAddAirline = async (e) => {
     e.preventDefault();
     try {
       const response = await fetch("/api/register", {
@@ -68,21 +63,29 @@ export default function PassengerManagement() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newPassenger),
+        body: JSON.stringify(newAirline),
       });
+
       if (!response.ok) {
-        throw new Error("Failed to add passenger");
+        throw new Error("Failed to add airline");
       }
-      const addedPassenger = await response.json();
-      fetchPassengers();
-      setNewPassenger({
+
+      const result = await response.json();
+
+      if (result.refreshToken) {
+        fetchAirlines();
+      } else {
+        throw new Error("Invalid airline data");
+      }
+
+      setNewAirline({
         name: "",
         username: "",
         password: "",
-        userType: "Passenger",
+        userType: "Airline",
       });
     } catch (err) {
-      setError("Error adding passenger. Please try again.");
+      setError("Error adding airline. Please try again.");
     }
   };
 
@@ -90,44 +93,43 @@ export default function PassengerManagement() {
 
   return (
     <div>
-      <form onSubmit={handleAddPassenger} className="mb-6 space-y-4">
+      <form onSubmit={handleAddAirline} className="mb-6 space-y-4">
         <div className="flex space-x-4">
           <Input
             placeholder="Name"
-            value={newPassenger.name}
+            value={newAirline.name}
             onChange={(e) =>
-              setNewPassenger({ ...newPassenger, name: e.target.value })
+              setNewAirline({ ...newAirline, name: e.target.value })
             }
             required
           />
           <Input
             placeholder="Username"
-            value={newPassenger.username}
+            value={newAirline.username}
             onChange={(e) =>
-              setNewPassenger({ ...newPassenger, username: e.target.value })
+              setNewAirline({ ...newAirline, username: e.target.value })
             }
             required
           />
           <Input
             placeholder="Password"
-            value={newPassenger.password}
+            value={newAirline.password}
             type="password"
             onChange={(e) =>
-              setNewPassenger({ ...newPassenger, password: e.target.value })
+              setNewAirline({ ...newAirline, password: e.target.value })
             }
             required
           />
-          <Button type="submit">Add Passenger</Button>
+          <Button type="submit">Add Airline</Button>
         </div>
       </form>
       {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white">
           <thead>
             <tr>
               <th className="px-6 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Passenger ID
+                Airline ID
               </th>
               <th className="px-6 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                 Name
@@ -136,7 +138,7 @@ export default function PassengerManagement() {
                 Username
               </th>
               <th className="px-6 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                User Type
+                UserType
               </th>
               <th className="px-6 py-3 border-b-2 border-gray-300 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                 Actions
@@ -144,25 +146,25 @@ export default function PassengerManagement() {
             </tr>
           </thead>
           <tbody>
-            {passengers.map((passenger) => (
-              <tr key={passenger.ID}>
+            {airlines.map((airline) => (
+              <tr key={airline.AirlineID}>
                 <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-                  {passenger.ID}
+                  {airline.AirlineID}
                 </td>
                 <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-                  {passenger.Name}
+                  {airline.Name}
                 </td>
                 <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-                  {passenger.Username}
+                  {airline.Username}
                 </td>
                 <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-                  {passenger.UserType}
+                  {airline.UserType}
                 </td>
                 <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
                   <Button
                     variant="ghost"
                     className="text-red-600 hover:text-red-800"
-                    onClick={() => handleDelete(passenger.ID)}
+                    onClick={() => handleDelete(airline)}
                   >
                     Delete
                   </Button>
