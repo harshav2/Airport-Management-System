@@ -11,7 +11,7 @@ export default function RegisterPage() {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [userType, setUserType] = useState("User");
+  const [userType, setUserType] = useState("Passenger");
   const [error, setError] = useState("");
   const router = useRouter();
 
@@ -126,7 +126,7 @@ export default function RegisterPage() {
                 value={userType}
                 onChange={(e) => setUserType(e.target.value)}
               >
-                <option value="User">User</option>
+                <option value="User">Passenger</option>
                 <option value="Admin">Admin</option>
                 <option value="Airline">Airline</option>
                 <option value="Store">Store</option>
