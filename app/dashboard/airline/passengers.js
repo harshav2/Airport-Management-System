@@ -193,7 +193,7 @@ export default function PassengerManagement() {
                 <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
                   <Button
                     variant="ghost"
-                    className="text-blue-600 hover:text-blue-800 mr-2"
+                    className="text-red-600 hover:text-red-800 mr-2"
                     onClick={() => handleEdit(passenger)}
                   >
                     Edit

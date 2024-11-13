@@ -50,29 +50,20 @@ export default function StaffDashboard() {
                 <Menu className="h-6 w-6" />
               </button>
               <Link href="/" className="flex items-center space-x-2">
-                <Plane className="h-8 w-8 text-blue-500" />
+                <Plane className="h-8 w-8 text-red-500" />
                 <span className="text-xl font-semibold text-gray-800">
                   AirlineMS
                 </span>
               </Link>
             </div>
             <nav className="hidden md:flex space-x-4">
-              <Link
-                className="text-sm font-medium hover:text-blue-600"
-                href="#"
-              >
+              <Link className="text-sm font-medium hover:text-red-600" href="#">
                 Dashboard
               </Link>
-              <Link
-                className="text-sm font-medium hover:text-blue-600"
-                href="#"
-              >
+              <Link className="text-sm font-medium hover:text-red-600" href="#">
                 Operations
               </Link>
-              <Link
-                className="text-sm font-medium hover:text-blue-600"
-                href="#"
-              >
+              <Link className="text-sm font-medium hover:text-red-600" href="#">
                 Support
               </Link>
             </nav>
@@ -96,7 +87,7 @@ export default function StaffDashboard() {
                 href="#"
                 className={`flex items-center space-x-2 px-4 py-2 ${
                   activeTab === "overview"
-                    ? "bg-blue-100 text-blue-600"
+                    ? "bg-red-100 text-red-600"
                     : "text-gray-600 hover:bg-gray-100"
                 }`}
                 onClick={() => {
@@ -111,7 +102,7 @@ export default function StaffDashboard() {
                 href="#"
                 className={`flex items-center space-x-2 px-4 py-2 ${
                   activeTab === "passengerList"
-                    ? "bg-blue-100 text-blue-600"
+                    ? "bg-red-100 text-red-600"
                     : "text-gray-600 hover:bg-gray-100"
                 }`}
                 onClick={() => {
@@ -126,7 +117,7 @@ export default function StaffDashboard() {
                 href="#"
                 className={`flex items-center space-x-2 px-4 py-2 ${
                   activeTab === "checkInStats"
-                    ? "bg-blue-100 text-blue-600"
+                    ? "bg-red-100 text-red-600"
                     : "text-gray-600 hover:bg-gray-100"
                 }`}
                 onClick={() => {
@@ -141,7 +132,7 @@ export default function StaffDashboard() {
                 href="#"
                 className={`flex items-center space-x-2 px-4 py-2 ${
                   activeTab === "announcements"
-                    ? "bg-blue-100 text-blue-600"
+                    ? "bg-red-100 text-red-600"
                     : "text-gray-600 hover:bg-gray-100"
                 }`}
                 onClick={() => {
@@ -207,13 +198,15 @@ function FlightOverview() {
   );
 }
 
-
 function PassengerList() {
   return (
     <div className="bg-white shadow rounded-lg p-4 md:p-6">
       <h2 className="text-xl font-semibold mb-4">Passenger List</h2>
-      <p>List of passengers would be shown here, potentially with filters and search options.</p>
-      <PassengerManagement/>
+      <p>
+        List of passengers would be shown here, potentially with filters and
+        search options.
+      </p>
+      <PassengerManagement />
     </div>
   );
 }
@@ -223,7 +216,7 @@ function CheckInStatistics() {
     <div className="bg-white shadow rounded-lg p-4 md:p-6">
       <h2 className="text-xl font-semibold mb-4">Check-In Statistics</h2>
       <p>Check-in data and graphs can be displayed in this section.</p>
-      <CheckInDetails/>
+      <CheckInDetails />
     </div>
   );
 }

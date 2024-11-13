@@ -61,7 +61,8 @@ CREATE TABLE Stores (
     StoreID INT AUTO_INCREMENT PRIMARY KEY,
     UserID INT NOT NULL UNIQUE,
     Floor INT,
-    Building VARCHAR(50) NOT NULL DEFAULT "Main Terminal"
+    Building VARCHAR(50) NOT NULL DEFAULT "Main Terminal",
+    FOREIGN KEY (UserID) REFERENCES User(ID) ON DELETE CASCADE
 );
 
 CREATE TABLE Item (
@@ -75,8 +76,8 @@ CREATE TABLE StallSellsItems (
     PricePerUnit DECIMAL(10, 2) NOT NULL,
     TotalQuantity INT NOT NULL,
     PRIMARY KEY (StoreID, ItemName),
-    FOREIGN KEY (StoreID) REFERENCES Stores(StoreID),
-    FOREIGN KEY (ItemName) REFERENCES Item(Name)
+    FOREIGN KEY (StoreID) REFERENCES Stores(StoreID) ON DELETE CASCADE,
+    FOREIGN KEY (ItemName) REFERENCES Item(Name) ON DELETE CASCADE
 );
 
 CREATE TABLE Transaction (
@@ -87,8 +88,8 @@ CREATE TABLE Transaction (
     UserID INT,
     StoreID INT,
     FOREIGN KEY (Item_name) REFERENCES Item(Name),
-    FOREIGN KEY (UserID) REFERENCES User(ID),
-    FOREIGN KEY (StoreID) REFERENCES Stores(StoreID)
+    FOREIGN KEY (UserID) REFERENCES User(ID) ON DELETE CASCADE,
+    FOREIGN KEY (StoreID) REFERENCES Stores(StoreID) ON DELETE CASCADE
 );
 
 CREATE TABLE RefreshTokens (
@@ -200,20 +201,20 @@ INSERT INTO AircraftFlyingFlight (AircraftID, FlightID, Date, ArrivalTime, Depar
     (5, 3, '2023-12-03', '20:40:00', '17:20:00', 'On time', 'E5', 'B5');
 
 UPDATE Stores 
-SET Floor = 1, Building = 'Main Terminal'
-WHERE StoreID = 1;
+    SET Floor = 1, Building = 'Main Terminal'
+    WHERE StoreID = 1;
 UPDATE Stores 
-SET Floor = 2, Building = 'International Terminal'
-WHERE StoreID = 2;
+    SET Floor = 2, Building = 'International Terminal'
+    WHERE StoreID = 2;
 UPDATE Stores 
-SET Floor = 3, Building = 'Domestic Terminal'
-WHERE StoreID = 3;
+    SET Floor = 3, Building = 'Domestic Terminal'
+    WHERE StoreID = 3;
 UPDATE Stores 
-SET Floor = 1, Building = 'Concourse A'
-WHERE StoreID = 4;
+    SET Floor = 1, Building = 'Concourse A'
+    WHERE StoreID = 4;
 UPDATE Stores 
-SET Floor = 2, Building = 'Concourse B'
-WHERE StoreID = 5;
+    SET Floor = 2, Building = 'Concourse B'
+    WHERE StoreID = 5;
 
 
 INSERT INTO Item (Name, Type) VALUES 

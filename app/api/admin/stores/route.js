@@ -1,11 +1,15 @@
 import { NextResponse } from "next/server";
 import { executeQuery } from "@/lib/db";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { JWT_EXPIRATION, JWT_REFRESH_EXPIRATION } from "@/config/jwt";
+import { exec } from "child_process";
 
 export async function GET() {
   try {
     const stores = await executeQuery({
       query:
-        "SELECT s.StoreID, s.UserID, u.Name, s.Floor, s.Building FROM Stores s, User u WHERE s.UserID=u.ID ",
+        "SELECT s.StoreID,  u.Username, u.Name, s.Floor, s.Building FROM Stores s, User u WHERE s.UserID=u.ID ",
       values: [],
     });
     return NextResponse.json({ stores });
@@ -20,35 +24,34 @@ export async function GET() {
 
 export async function DELETE(request) {
   try {
-    let storeId;
+    let Username;
 
-    // Attempt to extract the store ID from the JSON body or URL
     try {
       const body = await request.json();
-      storeId = body.storeId;
+      Username = body.storeId.Username;
     } catch (jsonError) {
       console.error("JSON parsing error:", jsonError);
       const url = new URL(request.url);
-      storeId = url.searchParams.get("storeId");
+      Username = url.searchParams.get("Username");
     }
 
     // Check if storeId was provided
-    if (!storeId) {
+    if (!Username) {
       return NextResponse.json({
-        error: "Missing required field: storeId",
-        status: 400,
+        error: "Missing required field: Username",
+        status: 402,
       });
     }
 
     // Execute delete query
     const response = await executeQuery({
-      query: "DELETE FROM Stores WHERE StoreID = ?",
-      values: [storeId],
+      query: "DELETE FROM User WHERE Username = ?",
+      values: [Username],
     });
 
     if (!response.affectedRows) {
       return NextResponse.json({
-        error: "No store found with the given storeId",
+        error: "No store found with the given Username",
         status: 404,
       });
     }
@@ -56,8 +59,8 @@ export async function DELETE(request) {
     // Respond with success message
     return NextResponse.json({
       message: "Store deleted successfully",
-      deletedStoreId: storeId,
-      status: 200,
+      deletedStore: Username,
+      status: 201,
     });
   } catch (error) {
     console.error("Error in DELETE function:", error);
@@ -66,5 +69,71 @@ export async function DELETE(request) {
       details: error.message,
       status: 500,
     });
+  }
+}
+
+export async function POST(request) {
+  try {
+    const body = await request.json();
+    console.log(body);
+
+    const { Name, Username, Password, UserType, Floor, Building } = body;
+
+    if (!Name || !Username || !Password || !UserType) {
+      return NextResponse.json(
+        { message: "Missing required fields" },
+        { status: 400 }
+      );
+    }
+
+    // Check if user already exists
+    const existingUser = await executeQuery({
+      query: "SELECT * FROM User WHERE Username = ?",
+      values: [Username],
+    });
+
+    if (existingUser.length > 0) {
+      return NextResponse.json(
+        { message: "User already exists" },
+        { status: 409 }
+      );
+    }
+
+    // Hash password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(Password, salt);
+
+    // Insert new user
+    const userResult = await executeQuery({
+      query:
+        "INSERT INTO User (Name, Username, Password, UserType) VALUES (?, ?, ?, ?)",
+      values: [Name, Username, hashedPassword, UserType],
+    });
+
+    const userId = userResult.insertId;
+
+    // Insert or update store information
+    await executeQuery({
+      query:
+        "INSERT INTO Stores (UserID, Floor, Building) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE Floor = VALUES(Floor), Building = VALUES(Building)",
+      values: [userId, Floor, Building],
+    });
+
+    return NextResponse.json(
+      {
+        message: "User registered successfully",
+        username: Username,
+      },
+      { status: 201 }
+    );
+  } catch (error) {
+    console.error("Registration error:", error);
+    return NextResponse.json(
+      {
+        message: "Internal server error",
+        error: error.message,
+      },
+      { status: 500 }
+    );
   }
 }

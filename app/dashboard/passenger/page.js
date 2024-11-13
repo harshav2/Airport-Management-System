@@ -1,5 +1,5 @@
 "use client";
-import { useState ,useEffect} from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   Plane,
@@ -47,7 +47,7 @@ export default function UserDashboard() {
                 <Menu className="h-6 w-6" />
               </button>
               <Link href="/" className="flex items-center space-x-2">
-                <Plane className="h-8 w-8 text-blue-500" />
+                <Plane className="h-8 w-8 text-green-500" />
                 <span className="text-xl font-semibold text-gray-800">
                   AirportMS
                 </span>
@@ -55,19 +55,19 @@ export default function UserDashboard() {
             </div>
             <nav className="hidden md:flex space-x-4">
               <Link
-                className="text-sm font-medium hover:text-blue-600"
+                className="text-sm font-medium hover:text-green-600"
                 href="#"
               >
                 About
               </Link>
               <Link
-                className="text-sm font-medium hover:text-blue-600"
+                className="text-sm font-medium hover:text-green-600"
                 href="#"
               >
                 Services
               </Link>
               <Link
-                className="text-sm font-medium hover:text-blue-600"
+                className="text-sm font-medium hover:text-green-600"
                 href="#"
               >
                 Contact
@@ -93,7 +93,7 @@ export default function UserDashboard() {
                 href="#"
                 className={`flex items-center space-x-2 px-4 py-2 ${
                   activeTab === "checkin"
-                    ? "bg-blue-100 text-blue-600"
+                    ? "bg-green-100 text-green-600"
                     : "text-gray-600 hover:bg-gray-100"
                 }`}
                 onClick={() => {
@@ -108,7 +108,7 @@ export default function UserDashboard() {
                 href="#"
                 className={`flex items-center space-x-2 px-4 py-2 ${
                   activeTab === "status"
-                    ? "bg-blue-100 text-blue-600"
+                    ? "bg-green-100 text-green-600"
                     : "text-gray-600 hover:bg-gray-100"
                 }`}
                 onClick={() => {
@@ -123,7 +123,7 @@ export default function UserDashboard() {
                 href="#"
                 className={`flex items-center space-x-2 px-4 py-2 ${
                   activeTab === "info"
-                    ? "bg-blue-100 text-blue-600"
+                    ? "bg-green-100 text-green-600"
                     : "text-gray-600 hover:bg-gray-100"
                 }`}
                 onClick={() => {
@@ -138,7 +138,7 @@ export default function UserDashboard() {
                 href="#"
                 className={`flex items-center space-x-2 px-4 py-2 ${
                   activeTab === "map"
-                    ? "bg-blue-100 text-blue-600"
+                    ? "bg-green-100 text-green-600"
                     : "text-gray-600 hover:bg-gray-100"
                 }`}
                 onClick={() => {
@@ -194,7 +194,6 @@ export default function UserDashboard() {
     </div>
   );
 }
-
 
 export function FlightStatusAndAlerts() {
   const [flights, setFlights] = useState([]);
@@ -294,14 +293,14 @@ export function Information() {
   useEffect(() => {
     const fetchFlightDetails = async () => {
       try {
-        const response = await fetch('/api/user/information'); // Replace with your actual API endpoint
-        
+        const response = await fetch("/api/user/information"); // Replace with your actual API endpoint
+
         if (!response.ok) {
-          throw new Error('Failed to fetch flight details');
+          throw new Error("Failed to fetch flight details");
         }
 
         const data = await response.json();
-        setFlightDetails(data);  // Set the flight details from the API response
+        setFlightDetails(data); // Set the flight details from the API response
       } catch (error) {
         setError(error.message); // Capture any errors
       } finally {
@@ -331,18 +330,22 @@ export function Information() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <p>
-              <strong>Full Name:</strong> {flightDetails[0].Username} {/* Dynamic Username */}
+              <strong>Full Name:</strong> {flightDetails[0].Username}{" "}
+              {/* Dynamic Username */}
             </p>
             <p>
-              <strong>Flight ID:</strong> {flightDetails[0].FlightID} {/* Dynamic Flight ID */}
+              <strong>Flight ID:</strong> {flightDetails[0].FlightID}{" "}
+              {/* Dynamic Flight ID */}
             </p>
           </div>
           <div>
             <p>
-              <strong>Departure:</strong> {flightDetails[0].Origin} at {flightDetails[0].DepartureTime} {/* Dynamic Departure Time */}
+              <strong>Departure:</strong> {flightDetails[0].Origin} at{" "}
+              {flightDetails[0].DepartureTime} {/* Dynamic Departure Time */}
             </p>
             <p>
-              <strong>Arrival:</strong> {flightDetails[0].Destination} at {flightDetails[0].ArrivalTime} {/* Dynamic Arrival Time */}
+              <strong>Arrival:</strong> {flightDetails[0].Destination} at{" "}
+              {flightDetails[0].ArrivalTime} {/* Dynamic Arrival Time */}
             </p>
           </div>
         </div>
@@ -354,24 +357,30 @@ export function Information() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <p>
-              <strong>Airline:</strong> {flightDetails[0].Airline} {/* Dynamic Airline Name */}
+              <strong>Airline:</strong> {flightDetails[0].Airline}{" "}
+              {/* Dynamic Airline Name */}
             </p>
             <p>
-              <strong>Departure:</strong> {flightDetails[0].Origin} at {flightDetails[0].DepartureTime}
+              <strong>Departure:</strong> {flightDetails[0].Origin} at{" "}
+              {flightDetails[0].DepartureTime}
             </p>
             <p>
-              <strong>Arrival:</strong> {flightDetails[0].Destination} at {flightDetails[0].ArrivalTime}
+              <strong>Arrival:</strong> {flightDetails[0].Destination} at{" "}
+              {flightDetails[0].ArrivalTime}
             </p>
           </div>
           <div>
             <p>
-              <strong>Aircraft:</strong> {flightDetails[0].AircraftModel} {/* Dynamic Aircraft Model */}
+              <strong>Aircraft:</strong> {flightDetails[0].AircraftModel}{" "}
+              {/* Dynamic Aircraft Model */}
             </p>
             <p>
-              <strong>Gate:</strong> {flightDetails[0].Gate} {/* Dynamic Gate */}
+              <strong>Gate:</strong> {flightDetails[0].Gate}{" "}
+              {/* Dynamic Gate */}
             </p>
             <p>
-              <strong>Belt:</strong> {flightDetails[0].Belt} {/* Dynamic Belt */}
+              <strong>Belt:</strong> {flightDetails[0].Belt}{" "}
+              {/* Dynamic Belt */}
             </p>
           </div>
         </div>
@@ -379,7 +388,6 @@ export function Information() {
     </div>
   );
 }
-
 
 function AirportMap() {
   return (
@@ -397,8 +405,8 @@ function AirportMap() {
 export function CheckIn() {
   const [userId, setUserId] = useState("");
   const [flightId, setFlightId] = useState("");
-  const [noOfCheckIn, setNoOfCheckIn] = useState(0);  // State for checked-in luggage
-  const [noOfCabin, setNoOfCabin] = useState(0);      // State for carry-on luggage
+  const [noOfCheckIn, setNoOfCheckIn] = useState(0); // State for checked-in luggage
+  const [noOfCabin, setNoOfCabin] = useState(0); // State for carry-on luggage
   const [alertMessage, setAlertMessage] = useState("");
 
   // Handle form submission
@@ -408,20 +416,20 @@ export function CheckIn() {
     // Ensure all required fields are filled out
     if (!userId || !flightId || noOfCheckIn < 0 || noOfCabin < 0) {
       setAlertMessage("Please fill in all required fields.");
-      setTimeout(() => setAlertMessage(""), 3000);  // Display alert for 3 seconds
+      setTimeout(() => setAlertMessage(""), 3000); // Display alert for 3 seconds
       return;
     }
 
     const payload = {
       flightId,
       userId,
-      noOfCheckIn,    // Number of checked-in luggage
-      noOfCabin       // Number of carry-on luggage
+      noOfCheckIn, // Number of checked-in luggage
+      noOfCabin, // Number of carry-on luggage
     };
 
     try {
-      const response = await fetch('/api/user/check-in', {
-        method: 'POST',
+      const response = await fetch("/api/user/check-in", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -430,18 +438,22 @@ export function CheckIn() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        setAlertMessage(`Error: ${response.status} ${response.statusText} - ${errorData?.message || 'Please try again later.'}`);
+        setAlertMessage(
+          `Error: ${response.status} ${response.statusText} - ${
+            errorData?.message || "Please try again later."
+          }`
+        );
         setTimeout(() => setAlertMessage(""), 3000);
         return;
       }
 
       const result = await response.json();
-      console.log('Success:', result);
-      setAlertMessage('Check-in successful!');
+      console.log("Success:", result);
+      setAlertMessage("Check-in successful!");
       setTimeout(() => setAlertMessage(""), 3000);
     } catch (error) {
-      console.error('Error:', error);
-      setAlertMessage('There was an error during check-in. Please try again.');
+      console.error("Error:", error);
+      setAlertMessage("There was an error during check-in. Please try again.");
       setTimeout(() => setAlertMessage(""), 3000);
     }
   };
@@ -467,7 +479,7 @@ export function CheckIn() {
           <input
             value={userId}
             onChange={(e) => setUserId(e.target.value)}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50"
             id="userId"
             type="text"
             placeholder="Enter your User ID"
@@ -484,7 +496,7 @@ export function CheckIn() {
           <input
             value={flightId}
             onChange={(e) => setFlightId(e.target.value)}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50"
             id="flightId"
             type="text"
             placeholder="Enter your Flight ID"
@@ -493,13 +505,16 @@ export function CheckIn() {
 
         {/* New fields for No of Checked-In and Carry-On Luggage */}
         <div>
-          <label className="block text-sm font-medium text-gray-700" htmlFor="noOfCheckIn">
+          <label
+            className="block text-sm font-medium text-gray-700"
+            htmlFor="noOfCheckIn"
+          >
             Number of Checked-in Luggage
           </label>
           <input
             value={noOfCheckIn}
             onChange={(e) => setNoOfCheckIn(parseInt(e.target.value) || 0)}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50"
             id="noOfCheckIn"
             type="number"
             min="0"
@@ -508,13 +523,16 @@ export function CheckIn() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700" htmlFor="noOfCabin">
+          <label
+            className="block text-sm font-medium text-gray-700"
+            htmlFor="noOfCabin"
+          >
             Number of Carry-On Luggage
           </label>
           <input
             value={noOfCabin}
             onChange={(e) => setNoOfCabin(parseInt(e.target.value) || 0)}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50"
             id="noOfCabin"
             type="number"
             min="0"
@@ -524,7 +542,7 @@ export function CheckIn() {
 
         <button
           type="submit"
-          className="w-full mt-4 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
+          className="w-full mt-4 bg-green-600 text-white py-2 rounded-md hover:bg-green-700"
         >
           Submit
         </button>

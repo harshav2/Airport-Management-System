@@ -1,7 +1,7 @@
-import { executeQuery } from "../../../lib/db";
+import { executeQuery } from "@/lib/db";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { JWT_EXPIRATION, JWT_REFRESH_EXPIRATION } from "../../../config/jwt";
+import { JWT_EXPIRATION, JWT_REFRESH_EXPIRATION } from "@/config/jwt";
 import { NextResponse } from "next/server";
 
 // Define allowed user types based on the ENUM in the database

@@ -18,7 +18,7 @@ export async function DELETE(request) {
 
     if (!username) {
       return NextResponse.json({
-        error: "Missing required field: ID",
+        error: "Missing required field: Username",
         status: 400,
       });
     }
@@ -27,7 +27,9 @@ export async function DELETE(request) {
       query: "DELETE FROM User WHERE Username = ?",
       values: [username],
     });
+
     console.log(response);
+
     if (!response.affectedRows) {
       return NextResponse.json({
         error: "No airline found with the given username",
@@ -36,8 +38,8 @@ export async function DELETE(request) {
     }
 
     return NextResponse.json({
-      message: "User deleted successfully",
-      deletedAirlineId: username,
+      message: "Airline deleted successfully",
+      deletedAirline: username,
       status: 201,
     });
   } catch (error) {
