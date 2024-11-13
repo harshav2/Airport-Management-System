@@ -428,7 +428,7 @@ export function CheckIn() {
             className="block text-sm font-medium text-gray-700"
             htmlFor="userId"
           >
-            User ID
+            Username
           </label>
           <input
             value={userId}
@@ -436,7 +436,7 @@ export function CheckIn() {
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50"
             id="userId"
             type="text"
-            placeholder="Enter your User ID"
+            placeholder="Enter your Username"
           />
         </div>
 

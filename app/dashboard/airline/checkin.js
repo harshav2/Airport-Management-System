@@ -42,7 +42,7 @@ export default function CheckInDetails() {
           <thead>
             <tr>
               <th className="px-6 py-3 border-b border-gray-300 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Username
+                User ID
               </th>
               <th className="px-6 py-3 border-b border-gray-300 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                 Passenger Name
