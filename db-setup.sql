@@ -237,3 +237,71 @@ INSERT INTO Transaction (Qty, Item_name, UserID, StoreID) VALUES
     (3, 'T-shirt', 3, 3),
     (1, 'Headphones', 4, 4),
     (4, 'Water Bottle', 1, 3);
+
+-- Procedure for dashboard/airlines
+--add a single passenger 
+DELIMITER //
+
+CREATE PROCEDURE AddPassengerToFlight(
+    IN inputUsername VARCHAR(255),
+    IN inputFlightID INT
+)
+BEGIN
+    DECLARE userID INT;
+
+    -- Check if the user exists and is a 'Passenger'
+    SELECT ID INTO userID
+    FROM User  -- Ensure we're looking at the correct table
+    WHERE Username = inputUsername AND UserType = 'Passenger';  -- Check if UserType is 'Passenger'
+
+    -- If no matching user is found, raise an error
+    IF userID IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'User does not exist or is not a passenger';
+    ELSE
+        -- Insert the userID and flightID into the UserOnFlight table
+        INSERT INTO UserOnFlight (UserID, FlightID)
+        VALUES (userID, inputFlightID);
+    END IF;
+END //
+
+DELIMITER ;
+
+
+
+--show all passengers associated with airlines
+
+DELIMITER $$
+
+CREATE PROCEDURE GetPassengersForAirline(IN user_id INT)
+BEGIN
+  DECLARE airline_id INT;
+
+  -- Get AirlineID for the user
+  SELECT AirlineID INTO airline_id
+  FROM Airline 
+  WHERE UserID = user_id;
+
+  -- If no airline is found, return an empty result
+  IF airline_id IS NULL THEN
+    SELECT 'No airline found for the user' AS error;
+  ELSE
+    -- Fetch flights for the airline
+    SELECT f.ID AS FlightID, f.Destination, f.Origin
+    FROM Flight f
+    WHERE f.AirlineID = airline_id;
+    
+    -- Fetch passengers for these flights
+    SELECT 
+      u.ID AS UserID, 
+      u.Name, 
+      u.Username, 
+      uof.FlightID
+    FROM User u
+    INNER JOIN UserOnFlight uof ON u.ID = uof.UserID
+    WHERE uof.FlightID IN (SELECT f.ID FROM Flight f WHERE f.AirlineID = airline_id)
+    AND u.UserType = 'Passenger';
+  END IF;
+END $$
+
+DELIMITER ;
+

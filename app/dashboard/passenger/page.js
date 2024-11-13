@@ -9,8 +9,6 @@ import {
   Menu,
   BarChart,
   ShoppingBag,
-  Bell,
-  User,
 } from "lucide-react";
 
 export default function UserDashboard() {
@@ -27,8 +25,6 @@ export default function UserDashboard() {
         return <FlightStatusAndAlerts />;
       case "info":
         return <Information />;
-      case "map":
-        return <AirportMap />;
       default:
         return <CheckIn />;
     }
@@ -49,34 +45,16 @@ export default function UserDashboard() {
               <Link href="/" className="flex items-center space-x-2">
                 <Plane className="h-8 w-8 text-green-500" />
                 <span className="text-xl font-semibold text-gray-800">
-                  AirportMS
+                  AirportMS Passenger
                 </span>
               </Link>
             </div>
             <nav className="hidden md:flex space-x-4">
-              <Link
-                className="text-sm font-medium hover:text-green-600"
-                href="#"
-              >
-                About
-              </Link>
-              <Link
-                className="text-sm font-medium hover:text-green-600"
-                href="#"
-              >
-                Services
-              </Link>
-              <Link
-                className="text-sm font-medium hover:text-green-600"
-                href="#"
-              >
-                Contact
+              <Link href="/" className="flex items-center space-x-2 text-gray-600 hover:text-gray-900">
+                <LogOut className="h-5 w-5" />
+                <span>Logout</span>
               </Link>
             </nav>
-            <div className="flex items-center space-x-4">
-              <Bell className="h-6 w-6 text-gray-600 cursor-pointer" />
-              <User className="h-6 w-6 text-gray-600 cursor-pointer" />
-            </div>
           </div>
         </div>
       </header>
@@ -134,21 +112,7 @@ export default function UserDashboard() {
                 <Users className="h-5 w-5" />
                 <span>Information</span>
               </a>
-              <a
-                href="#"
-                className={`flex items-center space-x-2 px-4 py-2 ${
-                  activeTab === "map"
-                    ? "bg-green-100 text-green-600"
-                    : "text-gray-600 hover:bg-gray-100"
-                }`}
-                onClick={() => {
-                  setActiveTab("map");
-                  setIsSidebarOpen(false);
-                }}
-              >
-                <Briefcase className="h-5 w-5" />
-                <span>Airport Map</span>
-              </a>
+              
             </nav>
             <div className="p-4">
               <Link
@@ -389,19 +353,9 @@ export function Information() {
   );
 }
 
-function AirportMap() {
-  return (
-    <div className="bg-white shadow rounded-lg p-4 md:p-6">
-      <h2 className="text-xl font-semibold mb-4">Airport Map</h2>
-      <div className="bg-gray-200 p-4 text-center rounded-lg">
-        <p>Airport map placeholder</p>
-        <p>
-          In a real application, you would integrate an interactive map here.
-        </p>
-      </div>
-    </div>
-  );
-}
+
+
+
 export function CheckIn() {
   const [userId, setUserId] = useState("");
   const [flightId, setFlightId] = useState("");
@@ -474,7 +428,7 @@ export function CheckIn() {
             className="block text-sm font-medium text-gray-700"
             htmlFor="userId"
           >
-            User ID
+            Username
           </label>
           <input
             value={userId}
@@ -482,7 +436,7 @@ export function CheckIn() {
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50"
             id="userId"
             type="text"
-            placeholder="Enter your User ID"
+            placeholder="Enter your Username"
           />
         </div>
 

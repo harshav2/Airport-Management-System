@@ -12,8 +12,6 @@ import {
   Menu,
   BarChart,
   ClipboardList,
-  Bell,
-  User,
 } from "lucide-react";
 
 export default function StaffDashboard() {
@@ -30,8 +28,6 @@ export default function StaffDashboard() {
         return <PassengerList />;
       case "checkInStats":
         return <CheckInStatistics />;
-      case "announcements":
-        return <Announcements />;
       default:
         return <FlightOverview />;
     }
@@ -52,25 +48,16 @@ export default function StaffDashboard() {
               <Link href="/" className="flex items-center space-x-2">
                 <Plane className="h-8 w-8 text-red-500" />
                 <span className="text-xl font-semibold text-gray-800">
-                  AirlineMS
+                  AirportMS Airline
                 </span>
               </Link>
             </div>
             <nav className="hidden md:flex space-x-4">
-              <Link className="text-sm font-medium hover:text-red-600" href="#">
-                Dashboard
-              </Link>
-              <Link className="text-sm font-medium hover:text-red-600" href="#">
-                Operations
-              </Link>
-              <Link className="text-sm font-medium hover:text-red-600" href="#">
-                Support
+              <Link href="/" className="flex items-center space-x-2 text-gray-600 hover:text-gray-900">
+                <LogOut className="h-5 w-5" />
+                <span>Logout</span>
               </Link>
             </nav>
-            <div className="flex items-center space-x-4">
-              <Bell className="h-6 w-6 text-gray-600 cursor-pointer" />
-              <User className="h-6 w-6 text-gray-600 cursor-pointer" />
-            </div>
           </div>
         </div>
       </header>
@@ -127,21 +114,6 @@ export default function StaffDashboard() {
               >
                 <ClipboardList className="h-5 w-5" />
                 <span>Check-In Statistics</span>
-              </a>
-              <a
-                href="#"
-                className={`flex items-center space-x-2 px-4 py-2 ${
-                  activeTab === "announcements"
-                    ? "bg-red-100 text-red-600"
-                    : "text-gray-600 hover:bg-gray-100"
-                }`}
-                onClick={() => {
-                  setActiveTab("announcements");
-                  setIsSidebarOpen(false);
-                }}
-              >
-                <Briefcase className="h-5 w-5" />
-                <span>Announcements</span>
               </a>
             </nav>
             <div className="p-4">
@@ -202,10 +174,6 @@ function PassengerList() {
   return (
     <div className="bg-white shadow rounded-lg p-4 md:p-6">
       <h2 className="text-xl font-semibold mb-4">Passenger List</h2>
-      <p>
-        List of passengers would be shown here, potentially with filters and
-        search options.
-      </p>
       <PassengerManagement />
     </div>
   );
@@ -215,17 +183,8 @@ function CheckInStatistics() {
   return (
     <div className="bg-white shadow rounded-lg p-4 md:p-6">
       <h2 className="text-xl font-semibold mb-4">Check-In Statistics</h2>
-      <p>Check-in data and graphs can be displayed in this section.</p>
       <CheckInDetails />
     </div>
   );
 }
 
-function Announcements() {
-  return (
-    <div className="bg-white shadow rounded-lg p-4 md:p-6">
-      <h2 className="text-xl font-semibold mb-4">Announcements</h2>
-      <p>Announcements and recent updates relevant to the airline staff.</p>
-    </div>
-  );
-}
