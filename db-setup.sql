@@ -237,3 +237,31 @@ INSERT INTO Transaction (Qty, Item_name, UserID, StoreID) VALUES
     (3, 'T-shirt', 3, 3),
     (1, 'Headphones', 4, 4),
     (4, 'Water Bottle', 1, 3);
+
+
+DELIMITER //
+
+CREATE PROCEDURE AddPassengerToFlight(
+    IN inputUsername VARCHAR(255),
+    IN inputFlightID INT
+)
+BEGIN
+    DECLARE userID INT;
+
+    -- Check if the user exists and is a 'Passenger'
+    SELECT ID INTO userID
+    FROM User  -- Ensure we're looking at the correct table
+    WHERE Username = inputUsername AND UserType = 'Passenger';  -- Check if UserType is 'Passenger'
+
+    -- If no matching user is found, raise an error
+    IF userID IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'User does not exist or is not a passenger';
+    ELSE
+        -- Insert the userID and flightID into the UserOnFlight table
+        INSERT INTO UserOnFlight (UserID, FlightID)
+        VALUES (userID, inputFlightID);
+    END IF;
+END //
+
+DELIMITER ;
+
