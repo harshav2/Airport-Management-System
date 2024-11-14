@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import InventoryManagement from "./inventory";
+import DashboardOverview from "./overview";
 import {
   ShoppingBag,
   Users,
@@ -16,10 +16,6 @@ import {
   Tag,
 } from "lucide-react";
 
-// Placeholder components for each section
-const DashboardOverview = ({ storeID }) => (
-  <div>Dashboard Overview for Store ID: {storeID}</div>
-);
 const SalesManagement = ({ storeID }) => (
   <div>Sales Management for Store ID: {storeID}</div>
 );
@@ -40,7 +36,6 @@ export default function StoreDashboard() {
   const [storeID, setStoreID] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const router = useRouter();
 
   useEffect(() => {
     const fetchStoreID = async () => {

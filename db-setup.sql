@@ -285,5 +285,18 @@ BEGIN
   END IF;
 END //
 
-DELIMITER ;
+CREATE FUNCTION get_total_sales_for_store(p_storeid INT)
+RETURNS INT
+DETERMINISTIC
+READS SQL DATA
+BEGIN
+    DECLARE total_sales INT;
 
+    SELECT IFNULL(SUM(Qty), 0) INTO total_sales
+    FROM transaction
+    WHERE StoreID = p_storeid;
+
+    RETURN total_sales;
+END //
+
+DELIMITER ;
