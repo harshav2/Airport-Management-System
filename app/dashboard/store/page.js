@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import InventoryManagement from "./inventory";
 import {
   ShoppingBag,
   Users,
@@ -22,9 +23,7 @@ const DashboardOverview = ({ storeID }) => (
 const SalesManagement = ({ storeID }) => (
   <div>Sales Management for Store ID: {storeID}</div>
 );
-const InventoryManagement = ({ storeID }) => (
-  <div>Inventory Management for Store ID: {storeID}</div>
-);
+
 const CustomerManagement = ({ storeID }) => (
   <div>Customer Management for Store ID: {storeID}</div>
 );
@@ -46,12 +45,12 @@ export default function StoreDashboard() {
   useEffect(() => {
     const fetchStoreID = async () => {
       try {
-        const response = await fetch("https://api.example.com/store-id");
+        const response = await fetch("/api/store/main");
         if (!response.ok) {
           throw new Error("Failed to fetch store ID");
         }
         const data = await response.json();
-        setStoreID(data.storeID);
+        setStoreID(data[0].StoreID);
         setIsLoading(false);
       } catch (err) {
         setError(err.message);
@@ -237,9 +236,7 @@ export default function StoreDashboard() {
         </aside>
 
         <main className="flex-1 overflow-y-auto p-4 lg:p-8">
-          <h1 className="text-2xl font-semibold mb-6">
-            Welcome, Store Admin {storeID ? `(Store ID: ${storeID})` : ""}
-          </h1>
+          <h1 className="text-2xl font-semibold mb-6">Welcome, Store Admin</h1>
           {renderContent()}
         </main>
       </div>

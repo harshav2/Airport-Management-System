@@ -103,7 +103,6 @@ export async function POST(request) {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(Password, salt);
 
-    // Insert new user
     const userResult = await executeQuery({
       query:
         "INSERT INTO User (Name, Username, Password, UserType) VALUES (?, ?, ?, ?)",
@@ -112,7 +111,6 @@ export async function POST(request) {
 
     const userId = userResult.insertId;
 
-    // Insert or update store information
     await executeQuery({
       query:
         "INSERT INTO Stores (UserID, Floor, Building) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE Floor = VALUES(Floor), Building = VALUES(Building)",
