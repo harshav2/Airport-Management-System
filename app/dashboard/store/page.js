@@ -15,10 +15,6 @@ import {
   DollarSign,
 } from "lucide-react";
 
-const SupplierManagement = ({ storeID }) => (
-  <div>Supplier Management for Store ID: {storeID}</div>
-);
-
 export default function StoreDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -63,8 +59,6 @@ export default function StoreDashboard() {
         return <InventoryManagement storeID={storeID} />;
       case "transaction":
         return <TransactionManagement storeID={storeID} />;
-      case "suppliers":
-        return <SupplierManagement storeID={storeID} />;
       default:
         return <DashboardOverview storeID={storeID} />;
     }
@@ -85,7 +79,7 @@ export default function StoreDashboard() {
               <Link href="/" className="flex items-center space-x-2">
                 <ShoppingBag className="h-8 w-8 text-yellow-500" />
                 <span className="text-xl font-semibold text-gray-800">
-                  StoreMS Admin
+                  AirportMS Store
                 </span>
               </Link>
             </div>
@@ -156,21 +150,6 @@ export default function StoreDashboard() {
               >
                 <DollarSign className="h-5 w-5" />
                 <span>Transaction Management</span>
-              </a>
-              <a
-                href="#"
-                className={`flex items-center space-x-2 px-4 py-2 ${
-                  activeTab === "suppliers"
-                    ? "bg-yellow-100 text-yellow-600"
-                    : "text-gray-600 hover:bg-gray-100"
-                }`}
-                onClick={() => {
-                  setActiveTab("suppliers");
-                  setIsSidebarOpen(false);
-                }}
-              >
-                <Users className="h-5 w-5" />
-                <span>Supplier Management</span>
               </a>
             </nav>
             <div className="p-4">
