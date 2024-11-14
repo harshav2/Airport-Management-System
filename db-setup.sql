@@ -160,45 +160,68 @@ END //
 DELIMITER ;
 
 INSERT INTO User (ID, Name, Username, Password, UserType) VALUES
-    (1, 'admin', 'admin', '$2a$10$5NGE5cGIFAJbPU6FcYvMm.sTkpvVJhY9n56zNRqEpmAVxDM5kte/a', 'Admin'),
-    (2, 'user', 'user', '$2a$10$uiSaHHXxw.0sJG/.B3N5Xui3TQd24dWfzcoXItgDW.5e3YLB8ddOq', 'Passenger'),
-    (3, 'airline', 'airline', '$2a$10$Ws.JorP51pbZ5tREEmZPFOdeKmpfGPnw5xAdoGHXK1TeU9JWBY4v2', 'Airline'),
-    (4, 'store', 'store', '$2a$10$KUYgMmd6kgfPJnbv9FXwouHkJzITJJIE6zsuchHDBgC2b0PPA0WDS', 'Store'),
-    (5, 'store1', 'store1', '$2a$10$zX8m/4zOXsMkCPGLMVll1eKBbkvSZu9S5Np4K2mp5zbz6qOZJnUE.', 'Store'),
-    (6, 'store2', 'store2', '$2a$10$Y.yo0isceeGcXDKwuWSbEezOUIJ1t4yzxU2WZud9T4P5WSULGDj4i', 'Store'),
-    (7, 'store3', 'store3', '$2a$10$nsbibPX.BBS.N8OyP3mNNuZ.F8kNtk.d2f/VsgmmwCaB71Nb1LSE2', 'Store'),
-    (8, 'airline2', 'airline2', '$2a$10$fhyEGldxbFNcXqyeSFv.i.tSI18w4wnmgjfvj1f2OKzrr9hRfD9O6', 'Airline'),
-    (9, 'airline3', 'airline3', '$2a$10$H8CRA0RpaDz7pak0k67N0ORRWeDIPH6GTczXG0hCgxelA.serI.Qi', 'Airline'),
-    (10, 'airline4', 'airline4', '$2a$10$yoC39Rw4x2W8IUUnxHn/VOV63aM31I54.0voF4Jbu1SwWtgWCFkOW', 'Airline'),
-    (11, 'airline5', 'airline5', '$2a$10$8XtpSbWQFcKNAB2HhbV.leVq.yYdFWdKF2FVTIi9jUBN3T/Sx7gkS', 'Airline');
+(1, 'admin', 'admin', '$2a$10$5NGE5cGIFAJbPU6FcYvMm.sTkpvVJhY9n56zNRqEpmAVxDM5kte/a', 'Admin'),
+(2, 'user', 'user', '$2a$10$uiSaHHXxw.0sJG/.B3N5Xui3TQd24dWfzcoXItgDW.5e3YLB8ddOq', 'Passenger'),
+(3, 'airline', 'airline', '$2a$10$Ws.JorP51pbZ5tREEmZPFOdeKmpfGPnw5xAdoGHXK1TeU9JWBY4v2', 'Airline'),
+(4, 'store', 'store', '$2a$10$KUYgMmd6kgfPJnbv9FXwouHkJzITJJIE6zsuchHDBgC2b0PPA0WDS', 'Store'),
+(5, 'store1', 'store1', '$2a$10$zX8m/4zOXsMkCPGLMVll1eKBbkvSZu9S5Np4K2mp5zbz6qOZJnUE.', 'Store'),
+(6, 'store2', 'store2', '$2a$10$Y.yo0isceeGcXDKwuWSbEezOUIJ1t4yzxU2WZud9T4P5WSULGDj4i', 'Store'),
+(7, 'store3', 'store3', '$2a$10$nsbibPX.BBS.N8OyP3mNNuZ.F8kNtk.d2f/VsgmmwCaB71Nb1LSE2', 'Store'),
+(8, 'airline2', 'airline2', '$2a$10$fhyEGldxbFNcXqyeSFv.i.tSI18w4wnmgjfvj1f2OKzrr9hRfD9O6', 'Airline'),
+(9, 'airline3', 'airline3', '$2a$10$H8CRA0RpaDz7pak0k67N0ORRWeDIPH6GTczXG0hCgxelA.serI.Qi', 'Airline'),
+(10, 'airline4', 'airline4', '$2a$10$yoC39Rw4x2W8IUUnxHn/VOV63aM31I54.0voF4Jbu1SwWtgWCFkOW', 'Airline'),
+(11, 'airline5', 'airline5', '$2a$10$8XtpSbWQFcKNAB2HhbV.leVq.yYdFWdKF2FVTIi9jUBN3T/Sx7gkS', 'Airline'),
+(13, 'smallman', 'smallman', '$2a$10$bPWt0L0Vn23QhqDQqhzMYemSyvwNG1xO9CgGmjt9irc.DVHv.3KT6', 'Passenger'),
+(14, 'passairline2', 'passairline3', '$2a$10$pz9FdjGCy7DX/AQjG69i4uX6WS8DD3QYbxU5KtaRwELSNb8XnQRTS', 'Passenger'),
+(15, 'anotherpassairline3', 'anotherpassairline3', '$2a$10$QIGQPcjTpawyZoYfG0y8XuEGyxRUVzURXZe2HbVd1xDwyIGWRUYTi', 'Passenger'),
+(16, 'dummy', 'dummy', '$2a$10$J/hHoifDJjvtLav4aigBf.wjmdcwPqekF/FRgg8fkYgqDaTDd10om', 'Passenger');
 
 
-INSERT INTO Aircraft (TailNumber, DateOfLastMaintenance, Model) VALUES 
-    ('N12345', '2023-10-01', 'Boeing 737'),
-    ('N67890', '2023-09-15', 'Airbus A320'),
-    ('N54321', '2023-08-30', 'Boeing 777'),
-    ('N09876', '2023-07-20', 'Airbus A380'),
-    ('N11223', '2023-06-10', 'Embraer 175');
 
-INSERT INTO Flight (Destination, Origin, AirlineID) VALUES 
-    ('New York (JFK)', 'Los Angeles (LAX)', 1),
-    ('Miami (MIA)', 'New York (JFK)', 2),
-    ('New York (JFK)', 'Seattle (SEA)', 3),
-    ('Boston (BOS)', 'New York (JFK)', 4),
-    ('New York (JFK)', 'San Francisco (SFO)', 5);
+INSERT INTO Aircraft (ID, TailNumber, DateOfLastMaintenance, Model) VALUES
+(1, 'N12345', '2023-10-01', 'Boeing 737'),
+(2, 'N67890', '2023-09-15', 'Airbus A320'),
+(3, 'N54321', '2023-08-30', 'Boeing 777'),
+(4, 'N09876', '2023-07-20', 'Airbus A380'),
+(5, 'N11223', '2023-06-10', 'Embraer 175'),
+(6, 'N12468', '2023-07-02', 'Boeing 787');
 
-INSERT INTO UserOnFlight (UserID, FlightID, NoOfCheckIn, NoOfCabin) VALUES 
-    (1, 2, 2, 1),
-    (2, 3, 1, 2),
-    (3, 4, 1, 1),
-    (4, 3, 2, 2);
 
-INSERT INTO AircraftFlyingFlight (AircraftID, FlightID, Date, ArrivalTime, DepartureTime, Status, Gate, Belt) VALUES 
-    (1, 4, '2023-12-02', '12:30:00', '09:15:00', 'On time', 'A1', 'B1'),
-    (2, 5, '2023-12-03', '14:45:00', '11:10:00', 'Delayed', 'B2', 'B2'),
-    (3, 1, '2023-12-04', '16:20:00', '13:05:00', 'On time', 'C3', 'B3'),
-    (4, 2, '2023-12-03', '18:55:00', '15:30:00', 'Cancelled', 'D4', 'B4'),
-    (5, 3, '2023-12-03', '20:40:00', '17:20:00', 'On time', 'E5', 'B5');
+INSERT INTO Flight (ID, Destination, Origin, AirlineID) VALUES
+(1, 'New York (JFK)', 'Los Angeles (LAX)', 1),
+(2, 'Miami (MIA)', 'New York (JFK)', 2),
+(3, 'New York (JFK)', 'Seattle (SEA)', 3),
+(4, 'Boston (BOS)', 'New York (JFK)', 4),
+(5, 'New York (JFK)', 'San Francisco (SFO)', 5),
+(6, 'Chicago (ORD)', 'Los Angeles (LAX)', 1),
+(7, 'Dallas (DFW)', 'Miami (MIA)', 2),
+(8, 'Boston (BOS)', 'San Francisco (SFO)', 3),
+(9, 'Seattle (SEA)', 'Los Angeles (LAX)', 4),
+(10, 'Washington D.C. (DCA)', 'New York (JFK)', 5);
+
+
+INSERT INTO UserOnFlight (UserID, FlightID, NoOfCheckIn, NoOfCabin) VALUES
+(13, 8, 1, 2),
+(14, 8, 0, 0),
+(15, 3, 4, 5),
+(16, 3, 2, 4);
+
+INSERT INTO Airline (AirlineID, UserID, Name) VALUES
+(1, 3, 'airline'),
+(2, 8, 'airline2'),
+(3, 9, 'airline3'),
+(4, 10, 'airline4'),
+(5, 11, 'airline5');
+
+
+INSERT INTO AircraftFlyingFlight (AircraftID, FlightID, Date, ArrivalTime, DepartureTime, Gate, Belt, Status) VALUES
+(1, 4, '2023-12-02', '12:30:00', '09:15:00', 'A1', 'B1', 'On time'),
+(2, 5, '2023-12-03', '14:45:00', '11:10:00', 'B2', 'B2', 'Delayed'),
+(3, 1, '2023-12-04', '16:20:00', '13:05:00', 'C3', 'B3', 'On time'),
+(4, 2, '2023-12-03', '18:55:00', '15:30:00', 'D4', 'B4', 'Cancelled'),
+(5, 3, '2023-12-03', '20:40:00', '17:20:00', 'E5', 'B5', 'On time'),
+(6, 8, '2023-12-05', '19:00:00', '15:30:00', 'F1', 'C1', 'On time');
+
 
 UPDATE Stores 
     SET Floor = 1, Building = 'Main Terminal'
