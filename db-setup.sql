@@ -193,10 +193,10 @@ INSERT INTO Flight (ID, Destination, Origin, AirlineID) VALUES
 (3, 'New York (JFK)', 'Seattle (SEA)', 3),
 (4, 'Boston (BOS)', 'New York (JFK)', 4),
 (5, 'New York (JFK)', 'San Francisco (SFO)', 5),
-(6, 'Chicago (ORD)', 'Los Angeles (LAX)', 1),
-(7, 'Dallas (DFW)', 'Miami (MIA)', 2),
-(8, 'Boston (BOS)', 'San Francisco (SFO)', 3),
-(9, 'Seattle (SEA)', 'Los Angeles (LAX)', 4),
+(6, 'New York (JFK)', 'Los Angeles (LAX)', 1),
+(7, 'New York (JFK)', 'Miami (MIA)', 2),
+(8, 'Boston (BOS)', 'New York (JFK)', 3),
+(9, 'Seattle (SEA)', 'New York (JFK)', 4),
 (10, 'Washington D.C. (DCA)', 'New York (JFK)', 5);
 
 

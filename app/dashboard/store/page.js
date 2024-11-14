@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import InventoryManagement from "./inventory";
 import DashboardOverview from "./overview";
+import TransactionManagement from "./transaction";
 import {
   ShoppingBag,
   Users,
@@ -12,22 +13,10 @@ import {
   Menu,
   BarChart,
   DollarSign,
-  Truck,
-  Tag,
 } from "lucide-react";
 
-const SalesManagement = ({ storeID }) => (
-  <div>Sales Management for Store ID: {storeID}</div>
-);
-
-const CustomerManagement = ({ storeID }) => (
-  <div>Customer Management for Store ID: {storeID}</div>
-);
 const SupplierManagement = ({ storeID }) => (
   <div>Supplier Management for Store ID: {storeID}</div>
-);
-const Promotions = ({ storeID }) => (
-  <div>Promotions for Store ID: {storeID}</div>
 );
 
 export default function StoreDashboard() {
@@ -70,16 +59,12 @@ export default function StoreDashboard() {
     switch (activeTab) {
       case "overview":
         return <DashboardOverview storeID={storeID} />;
-      case "sales":
-        return <SalesManagement storeID={storeID} />;
       case "inventory":
         return <InventoryManagement storeID={storeID} />;
-      case "customers":
-        return <CustomerManagement storeID={storeID} />;
+      case "transaction":
+        return <TransactionManagement storeID={storeID} />;
       case "suppliers":
         return <SupplierManagement storeID={storeID} />;
-      case "promotions":
-        return <Promotions storeID={storeID} />;
       default:
         return <DashboardOverview storeID={storeID} />;
     }
@@ -160,32 +145,17 @@ export default function StoreDashboard() {
               <a
                 href="#"
                 className={`flex items-center space-x-2 px-4 py-2 ${
-                  activeTab === "sales"
+                  activeTab === "transaction"
                     ? "bg-yellow-100 text-yellow-600"
                     : "text-gray-600 hover:bg-gray-100"
                 }`}
                 onClick={() => {
-                  setActiveTab("sales");
+                  setActiveTab("transaction");
                   setIsSidebarOpen(false);
                 }}
               >
                 <DollarSign className="h-5 w-5" />
-                <span>Sales Management</span>
-              </a>
-              <a
-                href="#"
-                className={`flex items-center space-x-2 px-4 py-2 ${
-                  activeTab === "customers"
-                    ? "bg-yellow-100 text-yellow-600"
-                    : "text-gray-600 hover:bg-gray-100"
-                }`}
-                onClick={() => {
-                  setActiveTab("customers");
-                  setIsSidebarOpen(false);
-                }}
-              >
-                <Users className="h-5 w-5" />
-                <span>Customer Management</span>
+                <span>Transaction Management</span>
               </a>
               <a
                 href="#"
@@ -199,23 +169,8 @@ export default function StoreDashboard() {
                   setIsSidebarOpen(false);
                 }}
               >
-                <Truck className="h-5 w-5" />
+                <Users className="h-5 w-5" />
                 <span>Supplier Management</span>
-              </a>
-              <a
-                href="#"
-                className={`flex items-center space-x-2 px-4 py-2 ${
-                  activeTab === "promotions"
-                    ? "bg-yellow-100 text-yellow-600"
-                    : "text-gray-600 hover:bg-gray-100"
-                }`}
-                onClick={() => {
-                  setActiveTab("promotions");
-                  setIsSidebarOpen(false);
-                }}
-              >
-                <Tag className="h-5 w-5" />
-                <span>Promotions</span>
               </a>
             </nav>
             <div className="p-4">
