@@ -145,21 +145,6 @@ export default function StoreDashboard() {
               <a
                 href="#"
                 className={`flex items-center space-x-2 px-4 py-2 ${
-                  activeTab === "sales"
-                    ? "bg-yellow-100 text-yellow-600"
-                    : "text-gray-600 hover:bg-gray-100"
-                }`}
-                onClick={() => {
-                  setActiveTab("sales");
-                  setIsSidebarOpen(false);
-                }}
-              >
-                <DollarSign className="h-5 w-5" />
-                <span>Sales Management</span>
-              </a>
-              <a
-                href="#"
-                className={`flex items-center space-x-2 px-4 py-2 ${
                   activeTab === "inventory"
                     ? "bg-yellow-100 text-yellow-600"
                     : "text-gray-600 hover:bg-gray-100"
@@ -171,6 +156,21 @@ export default function StoreDashboard() {
               >
                 <Package className="h-5 w-5" />
                 <span>Inventory Management</span>
+              </a>
+              <a
+                href="#"
+                className={`flex items-center space-x-2 px-4 py-2 ${
+                  activeTab === "sales"
+                    ? "bg-yellow-100 text-yellow-600"
+                    : "text-gray-600 hover:bg-gray-100"
+                }`}
+                onClick={() => {
+                  setActiveTab("sales");
+                  setIsSidebarOpen(false);
+                }}
+              >
+                <DollarSign className="h-5 w-5" />
+                <span>Sales Management</span>
               </a>
               <a
                 href="#"

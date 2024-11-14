@@ -1,36 +1,41 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 
-export default function DashboardOverview() {
-  const [status, setStatus] = useState(false);
+export default function DashboardOverview({ storeID }) {
   const [data, setData] = useState();
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const fetchData = useCallback(async () => {
+    if (!storeID) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await fetch(`/api/store/overview?storeID=${storeID}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch inventory");
+      }
+      const data = await response.json();
+      console.log(data);
+      setData(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }, [storeID]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("/api/store/overview");
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        const result = await response.json();
-        setData(result);
-        setStatus(true);
-      } catch (err) {
-        setError("An error occurred while fetching store data");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchData();
-  }, []);
+  }, [fetchData]);
 
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
         <Loader2 className="h-8 w-8 animate-spin text-yellow-500" />
@@ -38,29 +43,24 @@ export default function DashboardOverview() {
     );
   }
 
-  if (!status) {
-    return (
-      <div className="text-yellow-600 text-center" role="alert">
-        {error}
-      </div>
-    );
-  }
-
   return (
-    <div className="bg-yellow-50 p-6 rounded-lg">
-      <h2 className="text-xl font-semibold mb-4 text-yellow-800">
-        Store Overview
-      </h2>
+    <div>
+      {
+        <div className="flex flex-col space-y-4">
+          <div className="space-x-4"></div>
+          <div className="space-x-4"></div>
+        </div>
+      }
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <Card className="bg-yellow-100 border-yellow-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-yellow-800">
-              Total Products
+              Total Sales Made
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-yellow-900">
-              {data?.totalProducts}
+            <div className="text-xl font-bold text-yellow-900">
+              {data?.totalSales}
             </div>
           </CardContent>
         </Card>
@@ -71,20 +71,8 @@ export default function DashboardOverview() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-yellow-900">
-              {data?.todaySales}
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="bg-yellow-100 border-yellow-200">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-yellow-800">
-              Active Customers
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-yellow-900">
-              {data?.activeCustomers}
+            <div className="text-xl font-bold text-yellow-900">
+              {data?.salesFromToday}
             </div>
           </CardContent>
         </Card>
@@ -95,7 +83,7 @@ export default function DashboardOverview() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-yellow-900">
+            <div className="text-xl font-bold text-yellow-900">
               {data?.averageOrderValue}
             </div>
           </CardContent>
@@ -103,12 +91,36 @@ export default function DashboardOverview() {
         <Card className="bg-yellow-100 border-yellow-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-yellow-800">
-              Revenue Today
+              Lowest Sold Item
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-yellow-900">
-              {data?.revenueToday}
+            <div className="text-xl font-bold text-yellow-900">
+              {data?.lowestSoldItem} : {data?.lowestSoldValue}
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="bg-yellow-100 border-yellow-200">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-yellow-800">
+              Most Sold Item
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-xl font-bold text-yellow-900">
+              {data?.mostSoldItem} : {data?.mostSoldValue}
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="bg-yellow-100 border-yellow-200">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-yellow-800">
+              Most Sold Item Type
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-xl font-bold text-yellow-900">
+              {data?.mostSoldType} : {data?.mostTypeQty}
             </div>
           </CardContent>
         </Card>
