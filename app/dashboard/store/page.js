@@ -7,7 +7,7 @@ import DashboardOverview from "./overview";
 import TransactionManagement from "./transaction";
 import {
   ShoppingBag,
-  Users,
+  Plane,
   Package,
   LogOut,
   Menu,
@@ -77,7 +77,7 @@ export default function StoreDashboard() {
                 <Menu className="h-6 w-6" />
               </button>
               <Link href="/" className="flex items-center space-x-2">
-                <ShoppingBag className="h-8 w-8 text-yellow-500" />
+                <Plane className="h-8 w-8 text-yellow-500" />
                 <span className="text-xl font-semibold text-gray-800">
                   AirportMS Store
                 </span>
