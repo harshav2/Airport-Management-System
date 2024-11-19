@@ -206,13 +206,6 @@ INSERT INTO UserOnFlight (UserID, FlightID, NoOfCheckIn, NoOfCabin) VALUES
 (15, 3, 4, 5),
 (16, 3, 2, 4);
 
-INSERT INTO Airline (AirlineID, UserID, Name) VALUES
-(1, 3, 'airline'),
-(2, 8, 'airline2'),
-(3, 9, 'airline3'),
-(4, 10, 'airline4'),
-(5, 11, 'airline5');
-
 
 INSERT INTO AircraftFlyingFlight (AircraftID, FlightID, Date, ArrivalTime, DepartureTime, Gate, Belt, Status) VALUES
 (1, 4, '2023-12-02', '12:30:00', '09:15:00', 'A1', 'B1', 'On time'),
