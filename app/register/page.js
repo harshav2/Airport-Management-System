@@ -126,7 +126,7 @@ export default function RegisterPage() {
                 value={userType}
                 onChange={(e) => setUserType(e.target.value)}
               >
-                <option value="User">Passenger</option>
+                <option value="Passenger">Passenger</option>
                 <option value="Admin">Admin</option>
                 <option value="Airline">Airline</option>
                 <option value="Store">Store</option>
